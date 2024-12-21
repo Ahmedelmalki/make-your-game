@@ -14,9 +14,20 @@ let shipHeight = tileSize;
 let shipX = (tileSize * columns) / 2 - tileSize;
 let shipY = tileSize * rows - tileSize * 2;
 
+let ship = {
+  x: shipX,
+  y: shipY,
+  width: shipWidth,
+  height: shipHeight,
+};
+
 window.onload = function () {
   board = document.getElementById("board");
   board.width = boardWidth;
   board.height = boardHeight;
   context = board.getContext("2d");
+
+  // initial ship
+  context.fillStyle = "green";
+  context.fillRect(ship.x, ship.y, ship.width, ship.height);
 };
