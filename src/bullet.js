@@ -22,21 +22,49 @@ export function spawnBullet() {
 }
 
 function animateBullet(bullet) {
-  const interval = setInterval(() => {
+  function move() {
+    const bulletRect = bullet.getBoundingClientRect();
+    const aliens = document.querySelectorAll(".alien");
+
+    // Check collisions
+    aliens.forEach((alien) => {
+      const alienRect = alien.getBoundingClientRect();
+      if (isColliding(bulletRect, alienRect)) {
+        alien.remove();
+        bullet.remove();
+        return;
+      }
+    });
+
     const currentTop = parseInt(bullet.style.top, 10);
     if (currentTop <= 0) {
-      // Remove bullet if it goes out of bounds
       bullet.remove();
-      clearInterval(interval);
     } else {
-      // Move bullet upwards
-      bullet.style.top = `${currentTop - 5}px`; // Adjust the speed by changing -5
+      bullet.style.top = `${currentTop - 5}px`;
+      requestAnimationFrame(move);
     }
-  }, 16); // ~60 frames per second
+  }
+  requestAnimationFrame(move);
 }
+
+function isColliding(rect1, rect2) {
+  return !(
+    rect1.right < rect2.left ||
+    rect1.left > rect2.right ||
+    rect1.bottom < rect2.top ||
+    rect1.top > rect2.bottom
+  );
+}
+
+let lastBulletTime = 0;
+const BULLET_COOLDOWN = 100; // Milliseconds between bullets (100ms = max 10 per second)
 
 document.addEventListener("keydown", (e) => {
   if (e.code === "Space") {
-    spawnBullet();
+    const currentTime = Date.now();
+    if (currentTime - lastBulletTime >= BULLET_COOLDOWN) {
+      spawnBullet();
+      lastBulletTime = currentTime;
+    }
   }
 });
