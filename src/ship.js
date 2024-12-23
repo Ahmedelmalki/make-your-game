@@ -1,5 +1,9 @@
 export function setupShip(containerId) {
   const container = document.getElementById(containerId);
+   if (!container) {
+     console.error(`Container with id "${containerId}" not found.`);
+     return;
+   }
 
   // Create the ship
   const ship = document.createElement("img");

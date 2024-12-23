@@ -33,3 +33,10 @@ body {
   left: 50%; /* Center horizontally by default */
   transform: translateX(-50%);
 }
+
+.bullet {
+  position: absolute;
+  width: 10px; /* Adjust size as needed */
+  height: 20px;
+  z-index: 10; /* Make sure it appears above other elements */
+}
