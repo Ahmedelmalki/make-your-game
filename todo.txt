@@ -1,1 +1,6 @@
 - create more aliens
+- score board implementation
+- lives system
+- timer/countdown
+- pause menu
+- restart functionality
