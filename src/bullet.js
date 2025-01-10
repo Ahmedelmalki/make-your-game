@@ -7,7 +7,6 @@ export function spawnBullet() {
   bullet.alt = "Bullet";
   bullet.classList.add("bullet");
 
-  // Get the ship's current position
   const shipRect = ship.getBoundingClientRect();
   const containerRect = container.getBoundingClientRect();
 
@@ -18,10 +17,8 @@ export function spawnBullet() {
   bullet.style.top = `${bulletY}px`;
   container.appendChild(bullet);
 
-  // Animate the bullet upwards
   animateBullet(bullet);
 }
-// const score
 let varScore = 0;
 function animateBullet(bullet) {
   function move() {
@@ -62,8 +59,7 @@ function isColliding(rect1, rect2) {
 }
 
 let lastBulletTime = 0;
-const BULLET_COOLDOWN = 100; // Milliseconds between bullets (100ms = max 10 per second)
-
+const BULLET_COOLDOWN = 100; 
 document.addEventListener("keydown", (e) => {
   if (e.code === "Space") {
     const currentTime = Date.now();
@@ -109,23 +105,4 @@ export function scoreAndlives(containerId) {
   // Append score and lives to the container
   container.appendChild(score);
   container.appendChild(livesContainer);
-  console.log('here');
-  
-
-  // Logic to update score and lives
-  // return {
-  //   updateScore(newScore) {
-  //     varScore = newScore;
-  //     score.innerText = `Score: ${varScore}`;
-  //   },
-  //   removeLife() {
-  //     const hearts = livesContainer.querySelectorAll(".heart");
-  //     if (hearts.length > 0) {
-  //       hearts[hearts.length - 1].remove();
-  //     } else {
-  //       console.log("Game Over!");
-  //       // Implement your game-over logic here
-  //     }
-  //   },
-  // };
 }

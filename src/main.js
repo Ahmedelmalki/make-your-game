@@ -1,4 +1,4 @@
-import { setupShip } from "./ship.js";
+import { setupShip } from "./aliens.js";
 import { setupAliens } from "./aliens.js";
 import { spawnBullet } from "./bullet.js";
 import { startFPSCounter } from "./fps.js";

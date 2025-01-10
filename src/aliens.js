@@ -10,8 +10,8 @@ export function setupAliens(containerId, rows, aliensPerRow, alienImageSrc) {
 }
 
 export function createAliens(container, rows, aliensPerRow, alienImageSrc) {
-  const alienWidth = 32; 
-  const alienHeight = 32; 
+  const alienWidth = 32;
+  const alienHeight = 32;
   const aliens = [];
 
   for (let row = 0; row < rows; row++) {
@@ -38,7 +38,7 @@ export function animateAliens(container, aliens, aliensPerRow) {
   const containerWidth = container.offsetWidth;
   const containerHeight = container.offsetHeight;
 
-  const speed = 3;
+  const speed = 5;
   const verticalStep = alienHeight + 20;
 
   let position = 0;
@@ -48,21 +48,18 @@ export function animateAliens(container, aliens, aliensPerRow) {
   function animate() {
     position += speed * direction;
 
-    // Check if the group hits the walls
     const rightmost = position + aliensPerRow * (alienWidth + 10) - 10;
     if (rightmost >= containerWidth || position <= 0) {
       direction *= -1;
       topOffset += verticalStep;
     }
 
-    // Stop if aliens exceed container height
     if (topOffset + verticalStep > containerHeight) {
       console.log("Aliens have reached the bottom!");
       gameOver(container);
       return;
     }
 
-    // Update the position of all aliens
     for (let i = 0; i < aliens.length; i++) {
       const row = Math.floor(i / aliensPerRow);
       const column = i % aliensPerRow;
@@ -73,15 +70,51 @@ export function animateAliens(container, aliens, aliensPerRow) {
       aliens[i].style.top = `${top}px`;
     }
 
-    // Call animate again for the next frame
     requestAnimationFrame(animate);
   }
 
   animate();
 }
 
-// Main function to set up aliens
+/********************************* ship logic ****************************************/
 
+export function setupShip(containerId) {
+  const container = document.getElementById(containerId);
+  if (!container) {
+    console.error(`Container with id "${containerId}" not found.`);
+    return;
+  }
+
+  const ship = document.createElement("img");
+  ship.src = "./style/img/ship.png";
+  ship.alt = "Illustration of the ship";
+  ship.className = "ship";
+
+  container.appendChild(ship);
+  console.log(ship)
+
+  let shipPosition = container.offsetWidth / 2 - ship.offsetWidth / 2;
+
+  // only move the ship if the game ain't over
+  //if (gameOver(container) !== false) {
+    console.log('called 11111');
+    
+    document.addEventListener("keydown", (event) => {
+      const containerWidth = container.offsetWidth;
+
+      if (event.key === "ArrowLeft" && shipPosition > 0) {
+        shipPosition -= 15;
+      } else if (
+        event.key === "ArrowRight" &&
+        shipPosition < containerWidth - ship.offsetWidth
+      ) {
+        shipPosition += 15;
+      }
+
+      ship.style.left = `${shipPosition}px`;
+    });
+  //}
+}
 
 function gameOver(container) {
   const game_over = document.createElement('div')
@@ -99,6 +132,7 @@ function gameOver(container) {
   game_over.style.zIndex = '1000';
   game_over.textContent = 'Game Over';
   container.appendChild(game_over);
+  return false;
 }
 
 function won(container) {

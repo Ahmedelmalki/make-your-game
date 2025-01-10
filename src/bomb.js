@@ -33,7 +33,6 @@ export function boming(containerId) {
   function animateBomb(bomb) {
     function move() {
       const bombRect = bomb.getBoundingClientRect();
-      //console.log(bombRect);
       const containerRect = container.getBoundingClientRect();
       const ship = document.querySelector(".ship");
       if (ship) {
@@ -44,7 +43,6 @@ export function boming(containerId) {
           return;
         }
       }
-      // Remove bomb if it goes out of bounds
       if (bombRect.top >= containerRect.bottom) {
         bomb.remove();
       } else {
@@ -62,10 +60,8 @@ export function boming(containerId) {
       rect1.top > rect2.bottom
     );
   }
-  // Spawn bombs at random intervals
   setInterval(() => {
     if (Math.random() < 0.3) {
-      // Adjust probability (30% chance to spawn a bomb per interval)
       spawnBomb();
     }
   }, 1000);
