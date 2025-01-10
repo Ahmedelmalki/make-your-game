@@ -4,13 +4,13 @@ import { spawnBullet } from "./bullet.js";
 import { startFPSCounter } from "./fps.js";
 import { scoreAndlives } from "./bullet.js";
 import { boming } from "./bomb.js";
+import { moveShip } from "./aliens.js";
 
+const start_button = document.getElementById('start-btn')
 
-//createAliens(container, rows, aliensPerRow, alienImageSrc)
-//function animateAliens(container, aliens, aliensPerRow)
-//function setupAliens(containerId, rows, aliensPerRow, alienImageSrc)
-document.addEventListener("DOMContentLoaded", () => {
-  setupShip("container"); // Setup the ship
+start_button.addEventListener("click", () => {
+  setupShip("container");
+  moveShip('container')
   setupAliens("container", 2, 5, "./style/img/alien.png"); // Setup aliens
   spawnBullet();
   startFPSCounter("container");

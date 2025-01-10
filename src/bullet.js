@@ -83,7 +83,6 @@ export function scoreAndlives(containerId) {
   score.className = "score";
   score.innerText = `score : ${varScore}`;
 
-  // lives logic
   for (let i = 0; i < 4; i++) {
     let heart = document.createElement("img");
     heart.classList.add("heart");

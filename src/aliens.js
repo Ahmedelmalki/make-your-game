@@ -78,10 +78,10 @@ export function animateAliens(container, aliens, aliensPerRow) {
 
 /********************************* ship logic ****************************************/
 
-export function setupShip(containerId) {
-  const container = document.getElementById(containerId);
+export function setupShip(containerid) {
+  const container = document.getElementById(containerid);
   if (!container) {
-    console.error(`Container with id "${containerId}" not found.`);
+    console.error(`Container with id "${containerid}" not found.`);
     return;
   }
 
@@ -91,14 +91,15 @@ export function setupShip(containerId) {
   ship.className = "ship";
 
   container.appendChild(ship);
-  console.log(ship)
-
+  return ship
+}
+export function moveShip(container){
+  // don't forget const in declaretion
+  const ship = setupShip(container)
   let shipPosition = container.offsetWidth / 2 - ship.offsetWidth / 2;
 
   // only move the ship if the game ain't over
-  //if (gameOver(container) !== false) {
-    console.log('called 11111');
-    
+   
     document.addEventListener("keydown", (event) => {
       const containerWidth = container.offsetWidth;
 
@@ -113,7 +114,6 @@ export function setupShip(containerId) {
 
       ship.style.left = `${shipPosition}px`;
     });
-  //}
 }
 
 function gameOver(container) {
@@ -132,23 +132,22 @@ function gameOver(container) {
   game_over.style.zIndex = '1000';
   game_over.textContent = 'Game Over';
   container.appendChild(game_over);
-  return false;
 }
 
-function won(container) {
-  const WON = document.createElement('div')
-  WON.className = 'WON'
-  WON.style.position = 'absolute';
-  WON.style.top = '50%';
-  WON.style.left = '50%';
-  WON.style.transform = 'translate(-50%, -50%)';
-  WON.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
-  WON.style.color = 'white';
-  WON.style.fontSize = '2em';
-  WON.style.padding = '20px';
-  WON.style.borderRadius = '10px';
-  WON.style.textAlign = 'center';
-  WON.style.zIndex = '1000';
-  WON.textContent = 'WON';
-  container.appendChild(WON);
-}
+// function won(container) {
+//   const WON = document.createElement('div')
+//   WON.className = 'WON'
+//   WON.style.position = 'absolute';
+//   WON.style.top = '50%';
+//   WON.style.left = '50%';
+//   WON.style.transform = 'translate(-50%, -50%)';
+//   WON.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
+//   WON.style.color = 'white';
+//   WON.style.fontSize = '2em';
+//   WON.style.padding = '20px';
+//   WON.style.borderRadius = '10px';
+//   WON.style.textAlign = 'center';
+//   WON.style.zIndex = '1000';
+//   WON.textContent = 'WON';
+//   container.appendChild(WON);
+// }
