@@ -33,7 +33,7 @@ export function boming(containerId) {
   function animateBomb(bomb) {
     function move() {
       const bombRect = bomb.getBoundingClientRect();
-      console.log(bombRect);
+      //console.log(bombRect);
       const containerRect = container.getBoundingClientRect();
       const ship = document.querySelector(".ship");
       if (ship) {
