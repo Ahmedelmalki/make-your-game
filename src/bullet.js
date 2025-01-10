@@ -59,7 +59,7 @@ function isColliding(rect1, rect2) {
 }
 
 let lastBulletTime = 0;
-const BULLET_COOLDOWN = 100; 
+const BULLET_COOLDOWN = 100;
 document.addEventListener("keydown", (e) => {
   if (e.code === "Space") {
     const currentTime = Date.now();
@@ -83,14 +83,14 @@ export function scoreAndlives(containerId) {
   score.className = "score";
   score.innerText = `score : ${varScore}`;
 
-  // lives logic
-  for (let i = 0; i < 4; i++) {
-    let heart = document.createElement("img");
-    heart.classList.add("heart");
-  }
+  // // lives logic
+  // for (let i = 0; i < 4; i++) {
+  //   let heart = document.createElement("img");
+  //   heart.classList.add("heart");
+  // }
   const livesContainer = document.createElement("div");
   livesContainer.className = "lives-container";
- 
+
 
   // Add 3 hearts for lives
   for (let i = 0; i < 3; i++) {
@@ -98,7 +98,7 @@ export function scoreAndlives(containerId) {
     heart.src = "./style/img/heart.png";
     heart.alt = "Heart";
     heart.classList.add("heart");
-    
+
     livesContainer.appendChild(heart);
   }
 
