@@ -1,6 +1,6 @@
+const container = document.getElementById("container");
 
 export function spawnBullet() {
-  const container = document.getElementById("container");
   const ship = document.querySelector(".ship");
   const bullet = document.createElement("img");
   bullet.src = "./style/img/bullet.png";
@@ -29,7 +29,6 @@ function animateBullet(bullet) {
     aliens.forEach((alien) => {
       const alienRect = alien.getBoundingClientRect();
       if (isColliding(bulletRect, alienRect)) {
-        console.log('working ###')
         alien.remove();
         bullet.remove();
         varScore += 10;
@@ -59,7 +58,7 @@ function isColliding(rect1, rect2) {
 }
 
 let lastBulletTime = 0;
-const BULLET_COOLDOWN = 100; 
+const BULLET_COOLDOWN = 100;
 document.addEventListener("keydown", (e) => {
   if (e.code === "Space") {
     const currentTime = Date.now();
@@ -71,37 +70,27 @@ document.addEventListener("keydown", (e) => {
 });
 
 
+/********************************* score and lives logic ******************************************/
+export function scoreAndlives() {
+  //const container = document.getElementById('container');
 
-export function scoreAndlives(containerId) {
-  const container = document.getElementById(containerId);
-  if (!container) {
-    console.error(`Container with id "${containerId}" not found.`);
-    return;
-  }
-  // score logic
   const score = document.createElement("div");
   score.className = "score";
   score.innerText = `score : ${varScore}`;
 
-  for (let i = 0; i < 4; i++) {
-    let heart = document.createElement("img");
-    heart.classList.add("heart");
-  }
   const livesContainer = document.createElement("div");
   livesContainer.className = "lives-container";
- 
 
-  // Add 3 hearts for lives
+
   for (let i = 0; i < 3; i++) {
     const heart = document.createElement("img");
     heart.src = "./style/img/heart.png";
     heart.alt = "Heart";
     heart.classList.add("heart");
-    
+
     livesContainer.appendChild(heart);
   }
 
-  // Append score and lives to the container
   container.appendChild(score);
   container.appendChild(livesContainer);
 }

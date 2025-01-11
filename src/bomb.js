@@ -15,8 +15,7 @@ export function boming(containerId) {
     const containerRect = container.getBoundingClientRect();
 
     const bomb = document.createElement("img");
-    bomb.src = "./style/img/newLaserBomb.png";
-    console.log('here')
+    bomb.src = "/style/img/bomb.png";
     bomb.alt = "Bomb";
     bomb.classList.add("bomb");
     bomb.style.cssText = `
@@ -38,7 +37,9 @@ export function boming(containerId) {
       if (ship) {
         const shipRect = ship.getBoundingClientRect();
         if (isColliding(bombRect, shipRect)) {
-          console.log("ship hit!");
+          let lifes = document.querySelectorAll(".heart");
+          console.log(lifes.length);
+          lifes[0].remove();
           bomb.remove();
           return;
         }
@@ -61,7 +62,7 @@ export function boming(containerId) {
     );
   }
   setInterval(() => {
-    if (Math.random() < 0.3) {
+    if (Math.random() < 1) {
       spawnBomb();
     }
   }, 1000);

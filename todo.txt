@@ -1,5 +1,9 @@
-- lives system
 - pause menu
+Does the game display the pause menu, with the options: continue and restart?
++Does the project run quickly and effectively? (Favoring recursive, no unnecessary data requests, etc)
+
+
+- lives system
 - score board implementation
 
 

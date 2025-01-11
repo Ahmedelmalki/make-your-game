@@ -1,15 +1,11 @@
-export function setupAliens(containerId, rows, aliensPerRow, alienImageSrc) {
-  const container = document.getElementById(containerId);
-  if (!container) {
-    console.error(`Container with id "${containerId}" not found.`);
-    return;
-  }
+const container = document.getElementById('container');
+export function setupAliens(rows, aliensPerRow, alienImageSrc) {
 
-  const aliens = createAliens(container, rows, aliensPerRow, alienImageSrc);
-  animateAliens(container, aliens, aliensPerRow);
+  const aliens = createAliens(rows, aliensPerRow, alienImageSrc);
+  animateAliens( aliens, aliensPerRow);
 }
 
-export function createAliens(container, rows, aliensPerRow, alienImageSrc) {
+export function createAliens(rows, aliensPerRow, alienImageSrc) {
   const alienWidth = 32;
   const alienHeight = 32;
   const aliens = [];
@@ -21,8 +17,8 @@ export function createAliens(container, rows, aliensPerRow, alienImageSrc) {
       alien.alt = "Illustration of aliens";
       alien.classList.add("alien");
 
-      alien.style.left = i * (alienWidth + 10) + "px";
-      alien.style.top = row * (alienHeight + 20) + "px";
+      alien.style.left = i * (alienWidth + 300) + "px";
+      alien.style.top = row * (alienHeight + 300) + "px";
 
       container.appendChild(alien);
       aliens.push(alien);
@@ -32,7 +28,7 @@ export function createAliens(container, rows, aliensPerRow, alienImageSrc) {
   return aliens;
 }
 
-export function animateAliens(container, aliens, aliensPerRow) {
+export function animateAliens(aliens, aliensPerRow) {
   const alienWidth = 32;
   const alienHeight = 32;
   const containerWidth = container.offsetWidth;
@@ -78,42 +74,38 @@ export function animateAliens(container, aliens, aliensPerRow) {
 
 /********************************* ship logic ****************************************/
 
-export function setupShip(containerid) {
-  const container = document.getElementById(containerid);
-  if (!container) {
-    console.error(`Container with id "${containerid}" not found.`);
-    return;
-  }
+export function setupShip() {
+  const container = document.getElementById('container');
 
   const ship = document.createElement("img");
-  ship.src = "./style/img/ship.png";
+  ship.src = "./style/img/obama.png";
+  ship.id = 'ship'
   ship.alt = "Illustration of the ship";
   ship.className = "ship";
 
   container.appendChild(ship);
-  return ship
 }
-export function moveShip(container){
-  // don't forget const in declaretion
-  const ship = setupShip(container)
+
+// only move the ship if the game ain't over
+export function moveShip() {
+  console.log('entered !!!')
+  const container = document.getElementById('container')
+  const ship = document.getElementById('ship')
   let shipPosition = container.offsetWidth / 2 - ship.offsetWidth / 2;
+  document.addEventListener("keydown", (event) => {
+    const containerWidth = container.offsetWidth;
 
-  // only move the ship if the game ain't over
-   
-    document.addEventListener("keydown", (event) => {
-      const containerWidth = container.offsetWidth;
+    if (event.key === "ArrowLeft" && shipPosition > 0) {
+      shipPosition -= 15;
+    } else if (
+      event.key === "ArrowRight" &&
+      shipPosition < containerWidth - ship.offsetWidth
+    ) {
+      shipPosition += 15;
+    }
 
-      if (event.key === "ArrowLeft" && shipPosition > 0) {
-        shipPosition -= 15;
-      } else if (
-        event.key === "ArrowRight" &&
-        shipPosition < containerWidth - ship.offsetWidth
-      ) {
-        shipPosition += 15;
-      }
-
-      ship.style.left = `${shipPosition}px`;
-    });
+    ship.style.left = `${shipPosition}px`;
+  });
 }
 
 function gameOver(container) {
