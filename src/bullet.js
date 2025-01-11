@@ -70,14 +70,10 @@ document.addEventListener("keydown", (e) => {
 });
 
 
+/********************************* score and lives logic ******************************************/
+export function scoreAndlives() {
+  const container = document.getElementById('container');
 
-export function scoreAndlives(containerId) {
-  const container = document.getElementById(containerId);
-  if (!container) {
-    console.error(`Container with id "${containerId}" not found.`);
-    return;
-  }
-  // score logic
   const score = document.createElement("div");
   score.className = "score";
   score.innerText = `score : ${varScore}`;

@@ -78,42 +78,38 @@ export function animateAliens(container, aliens, aliensPerRow) {
 
 /********************************* ship logic ****************************************/
 
-export function setupShip(containerId) {
-  const container = document.getElementById(containerId);
-  if (!container) {
-    console.error(`Container with id "${containerId}" not found.`);
-    return;
-  }
+export function setupShip() {
+  const container = document.getElementById('container');
 
   const ship = document.createElement("img");
   ship.src = "./style/img/george-wassouf.png";
+  ship.id = 'ship'
   ship.alt = "Illustration of the ship";
   ship.className = "ship";
 
   container.appendChild(ship);
-  console.log(ship)
+}
 
+// only move the ship if the game ain't over
+export function moveShip() {
+  console.log('entered !!!')
+  const container = document.getElementById('container')
+  const ship = document.getElementById('ship')
   let shipPosition = container.offsetWidth / 2 - ship.offsetWidth / 2;
+  document.addEventListener("keydown", (event) => {
+    const containerWidth = container.offsetWidth;
 
-  // only move the ship if the game ain't over
-  //if (gameOver(container) !== false) {
-    console.log('called 11111');
-    
-    document.addEventListener("keydown", (event) => {
-      const containerWidth = container.offsetWidth;
+    if (event.key === "ArrowLeft" && shipPosition > 0) {
+      shipPosition -= 15;
+    } else if (
+      event.key === "ArrowRight" &&
+      shipPosition < containerWidth - ship.offsetWidth
+    ) {
+      shipPosition += 15;
+    }
 
-      if (event.key === "ArrowLeft" && shipPosition > 0) {
-        shipPosition -= 15;
-      } else if (
-        event.key === "ArrowRight" &&
-        shipPosition < containerWidth - ship.offsetWidth
-      ) {
-        shipPosition += 15;
-      }
-
-      ship.style.left = `${shipPosition}px`;
-    });
-  //}
+    ship.style.left = `${shipPosition}px`;
+  });
 }
 
 function gameOver(container) {

@@ -3,7 +3,7 @@ M ?= "Update"
 push:
 	git add .
 	git commit -m "$(M)"
-	git push -f
+	git push 
 
 help:
 	@echo "Usage:"
