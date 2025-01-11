@@ -14,7 +14,7 @@ menu.style.display = 'none'
 document.addEventListener("DOMContentLoaded", () => {
   setupShip();
   moveShip()
-  setupAliens(3, 8, "./style/img/osama.png");
+  setupAliens(3, 8, "./style/img/alien.png");
   spawnBullet();
   boming("container");
   startFPSCounter("container");

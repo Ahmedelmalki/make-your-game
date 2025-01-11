@@ -78,7 +78,7 @@ export function setupShip() {
   const container = document.getElementById('container');
 
   const ship = document.createElement("img");
-  ship.src = "./style/img/obama.png";
+  ship.src = "./style/img/ship.png";
   ship.id = 'ship'
   ship.alt = "Illustration of the ship";
   ship.className = "ship";
