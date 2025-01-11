@@ -1,9 +1,12 @@
-export function startFPSCounter(containerId) {
-  const container = document.getElementById(containerId);
-  if (!container) {
-    console.error(`Container with id "${containerId}" not found.`);
-    return;
-  }
+export function startFPSCounter() {
+  const container = document.getElementById('container');
+
+  /*const start = performance.now();
+  for (let i = 0; i < 100000; i++) { console.log('oh no') };
+  const end = performance.now();
+  console.log(end - start, 'ms')
+  */
+
   let frames = 0;
   let lastTime = performance.now();
   let fpsHistory = [];
