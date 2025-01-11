@@ -86,7 +86,7 @@ export function setupShip(containerId) {
   }
 
   const ship = document.createElement("img");
-  ship.src = "./style/img/ship.png";
+  ship.src = "./style/img/george-wassouf.png";
   ship.alt = "Illustration of the ship";
   ship.className = "ship";
 

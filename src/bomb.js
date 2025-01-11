@@ -15,7 +15,7 @@ export function boming(containerId) {
     const containerRect = container.getBoundingClientRect();
 
     const bomb = document.createElement("img");
-    bomb.src = "/style/img/newLaserBomb.png";
+    bomb.src = "/style/img/bomb.png";
     bomb.alt = "Bomb";
     bomb.classList.add("bomb");
     bomb.style.cssText = `

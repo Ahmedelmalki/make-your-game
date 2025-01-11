@@ -29,7 +29,6 @@ function animateBullet(bullet) {
     aliens.forEach((alien) => {
       const alienRect = alien.getBoundingClientRect();
       if (isColliding(bulletRect, alienRect)) {
-        console.log('working ###')
         alien.remove();
         bullet.remove();
         varScore += 10;
@@ -83,16 +82,10 @@ export function scoreAndlives(containerId) {
   score.className = "score";
   score.innerText = `score : ${varScore}`;
 
-  // // lives logic
-  // for (let i = 0; i < 4; i++) {
-  //   let heart = document.createElement("img");
-  //   heart.classList.add("heart");
-  // }
   const livesContainer = document.createElement("div");
   livesContainer.className = "lives-container";
 
 
-  // Add 3 hearts for lives
   for (let i = 0; i < 3; i++) {
     const heart = document.createElement("img");
     heart.src = "./style/img/heart.png";
@@ -102,7 +95,6 @@ export function scoreAndlives(containerId) {
     livesContainer.appendChild(heart);
   }
 
-  // Append score and lives to the container
   container.appendChild(score);
   container.appendChild(livesContainer);
 }
