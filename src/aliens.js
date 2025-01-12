@@ -1,8 +1,47 @@
+import { startFPSCounter } from "./fps.js";
+import { boming } from "./bomb.js";
 const container = document.getElementById('container');
+/************************************ pause menu logic ***********************************/
+let gameRunning = false;
+let gamePaused = false;
+
+function startGame() {
+  if (gameRunning) return;
+
+  gameRunning = true;
+  gamePaused = false;
+
+  setupShip();
+  moveShip();
+  setupAliens(3, 8, "./style/img/alien.png");
+  spawnBullet();
+  boming("container");
+  startFPSCounter();
+
+  menu.style.display = 'none';
+  start.style.display = 'none';
+}
+
+function togglePause() {
+  if (!gameRunning) return;
+  gamePaused = !gamePaused;
+
+  console.log(gamePaused ? 'Game Paused' : 'Game Resumed');
+}
+
+document.addEventListener('keydown', (e) => {
+  if (e.code === 's' || e.key === 's') {
+    startGame();
+  } else if (e.code === 'p' || e.key === 'p') {
+    togglePause();
+  }
+});
+
+/******************************** Aliens logic *************************************/
 export function setupAliens(rows, aliensPerRow, alienImageSrc) {
 
   const aliens = createAliens(rows, aliensPerRow, alienImageSrc);
-  animateAliens( aliens, aliensPerRow);
+  animateAliens(aliens, aliensPerRow);
 }
 
 export function createAliens(rows, aliensPerRow, alienImageSrc) {
@@ -42,28 +81,30 @@ export function animateAliens(aliens, aliensPerRow) {
   let topOffset = 0;
 
   function animate() {
-    position += speed * direction;
+    if (!gamePaused) {
+      position += speed * direction;
 
-    const rightmost = position + aliensPerRow * (alienWidth + 10) - 10;
-    if (rightmost >= containerWidth || position <= 0) {
-      direction *= -1;
-      topOffset += verticalStep;
-    }
+      const rightmost = position + aliensPerRow * (alienWidth + 10) - 10;
+      if (rightmost >= containerWidth || position <= 0) {
+        direction *= -1;
+        topOffset += verticalStep;
+      }
 
-    if (topOffset + verticalStep > containerHeight) {
-      console.log("Aliens have reached the bottom!");
-     // gameOver(container);
-      return;
-    }
+      if (topOffset + verticalStep > containerHeight) {
+        console.log("Aliens have reached the bottom!");
+        // gameOver(container);
+        return;
+      }
 
-    for (let i = 0; i < aliens.length; i++) {
-      const row = Math.floor(i / aliensPerRow);
-      const column = i % aliensPerRow;
-      const left = position + column * (alienWidth + 10);
-      const top = topOffset + row * verticalStep;
+      for (let i = 0; i < aliens.length; i++) {
+        const row = Math.floor(i / aliensPerRow);
+        const column = i % aliensPerRow;
+        const left = position + column * (alienWidth + 10);
+        const top = topOffset + row * verticalStep;
 
-      aliens[i].style.left = `${left}px`;
-      aliens[i].style.top = `${top}px`;
+        aliens[i].style.left = `${left}px`;
+        aliens[i].style.top = `${top}px`;
+      }
     }
 
     requestAnimationFrame(animate);
@@ -75,8 +116,6 @@ export function animateAliens(aliens, aliensPerRow) {
 /********************************* ship logic ****************************************/
 
 export function setupShip() {
-  const container = document.getElementById('container');
-
   const ship = document.createElement("img");
   ship.src = "./style/img/ship.png";
   ship.id = 'ship'
@@ -88,9 +127,8 @@ export function setupShip() {
 
 // only move the ship if the game ain't over
 export function moveShip() {
-  console.log('entered !!!')
-  const container = document.getElementById('container')
   const ship = document.getElementById('ship')
+
   let shipPosition = container.offsetWidth / 2 - ship.offsetWidth / 2;
   document.addEventListener("keydown", (event) => {
     const containerWidth = container.offsetWidth;
@@ -107,7 +145,7 @@ export function moveShip() {
     ship.style.left = `${shipPosition}px`;
   });
 }
-/***********************************************************************/
+/*********************************** bullet logic ************************************/
 
 export function spawnBullet() {
   const ship = document.querySelector(".ship");
@@ -128,29 +166,33 @@ export function spawnBullet() {
 
   animateBullet(bullet);
 }
+
 let varScore = 0;
 function animateBullet(bullet) {
   function move() {
-    const bulletRect = bullet.getBoundingClientRect();
-    const aliens = document.querySelectorAll(".alien");
+    if (!gamePaused) {
+      const bulletRect = bullet.getBoundingClientRect();
+      const aliens = document.querySelectorAll(".alien");
 
-    // Check collisions
-    aliens.forEach((alien) => {
-      const alienRect = alien.getBoundingClientRect();
-      if (isColliding(bulletRect, alienRect)) {
-        alien.remove();
+      aliens.forEach((alien) => {
+        const alienRect = alien.getBoundingClientRect();
+        if (isColliding(bulletRect, alienRect)) {
+          alien.remove();
+          bullet.remove();
+          varScore += 10;
+          scoreAndlives();
+          return;
+        }
+      });
+
+      const currentTop = parseInt(bullet.style.top, 10);
+      if (currentTop <= 0) {
         bullet.remove();
-        varScore += 10;
-        scoreAndlives("container");
-        return;
+      } else {
+        bullet.style.top = `${currentTop - 5}px`;
       }
-    });
-
-    const currentTop = parseInt(bullet.style.top, 10);
-    if (currentTop <= 0) {
-      bullet.remove();
-    } else {
-      bullet.style.top = `${currentTop - 5}px`;
+    }
+    if (bullet.parentNode) {
       requestAnimationFrame(move);
     }
   }
@@ -181,8 +223,6 @@ document.addEventListener("keydown", (e) => {
 
 /********************************* score and lives logic ******************************************/
 export function scoreAndlives() {
-  //const container = document.getElementById('container');
-
   const score = document.createElement("div");
   score.className = "score";
   score.innerText = `score : ${varScore}`;

@@ -12,7 +12,6 @@ export function startFPSCounter() {
   let fpsHistory = [];
   const historySize = 60;
 
-  // fps
   const fps = document.createElement("div");
   fps.className = "fps-display";
   container.appendChild(fps);
