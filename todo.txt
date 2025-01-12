@@ -1,4 +1,5 @@
 - pause menu
+- restart functionality
 Does the game display the pause menu, with the options: continue and restart?
 +Does the project run quickly and effectively? (Favoring recursive, no unnecessary data requests, etc)
 
@@ -8,6 +9,5 @@ Does the game display the pause menu, with the options: continue and restart?
 
 
 - timer/countdown
-- restart functionality
 
 NOTE : one by one 

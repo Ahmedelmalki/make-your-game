@@ -1,9 +1,15 @@
 import { startFPSCounter } from "./fps.js";
 import { boming } from "./bomb.js";
+
 const container = document.getElementById('container');
+const ship = document.getElementById('ship')
+ship.style.display = 'none'
+
 /************************************ pause menu logic ***********************************/
 let gameRunning = false;
 let gamePaused = false;
+const start = document.querySelector('.start')
+const menu = document.querySelector('.menu')
 
 function startGame() {
   if (gameRunning) return;
@@ -11,13 +17,13 @@ function startGame() {
   gameRunning = true;
   gamePaused = false;
 
-  setupShip();
+  // setupShip();
   moveShip();
   setupAliens(3, 8, "./style/img/alien.png");
   spawnBullet();
   boming("container");
   startFPSCounter();
-
+  ship.style.display = 'block'
   menu.style.display = 'none';
   start.style.display = 'none';
 }
@@ -34,6 +40,11 @@ document.addEventListener('keydown', (e) => {
     startGame();
   } else if (e.code === 'p' || e.key === 'p') {
     togglePause();
+  }
+  if (e.code === 'r' || e.key === 'r') {    
+    location.reload(true)
+    // gameRunning = true
+    // startGame();
   }
 });
 
@@ -115,19 +126,19 @@ export function animateAliens(aliens, aliensPerRow) {
 
 /********************************* ship logic ****************************************/
 
-export function setupShip() {
-  const ship = document.createElement("img");
-  ship.src = "./style/img/ship.png";
-  ship.id = 'ship'
-  ship.alt = "Illustration of the ship";
-  ship.className = "ship";
+// export function setupShip() {
+//   const ship = document.createElement("img");
+//   ship.src = "./style/img/ship.png";
+//   ship.id = 'ship'
+//   ship.alt = "Illustration of the ship";
+//   ship.className = "ship";
 
-  container.appendChild(ship);
-}
+//   container.appendChild(ship);
+// }
 
 // only move the ship if the game ain't over
 export function moveShip() {
-  const ship = document.getElementById('ship')
+  //const ship = document.getElementById('ship')
 
   let shipPosition = container.offsetWidth / 2 - ship.offsetWidth / 2;
   document.addEventListener("keydown", (event) => {
@@ -135,10 +146,7 @@ export function moveShip() {
 
     if (event.key === "ArrowLeft" && shipPosition > 0) {
       shipPosition -= 15;
-    } else if (
-      event.key === "ArrowRight" &&
-      shipPosition < containerWidth - ship.offsetWidth
-    ) {
+    } else if (event.key === "ArrowRight" && shipPosition < containerWidth - ship.offsetWidth) {
       shipPosition += 15;
     }
 
@@ -181,7 +189,7 @@ function animateBullet(bullet) {
           bullet.remove();
           varScore += 10;
           scoreAndlives();
-          return;
+          //return;
         }
       });
 
