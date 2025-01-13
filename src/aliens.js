@@ -1,7 +1,10 @@
 const container = document.getElementById('container');
 const ship = document.getElementById('ship')
 ship.style.display = 'none'
+const score = document.querySelector('.score')
+const hearts = document.querySelector('.heartsCount')
 var varScore = 0;
+let heartsCount = 3
 
 /************************************ pause menu logic ***********************************/
 let gameRunning = false;
@@ -23,6 +26,7 @@ function restartGame() {
   ship.style.display = 'none';
   // why is it not changing
   varScore = 0
+  heartsCount = 3
 
   gameRunning = false;
   gamePaused = false;
@@ -34,13 +38,12 @@ function startGame() {
   gameRunning = true;
   gamePaused = false;
 
-  // setupShip();
   moveShip();
   setupAliens(3, 8, "./style/img/alien.png");
   spawnBullet();
   boming("container");
   startFPSCounter();
-  updateScore()
+  //updateScore()
   ship.style.display = 'block'
   menu.style.display = 'none';
   start.style.display = 'none';
@@ -144,8 +147,6 @@ function animateAliens(aliens, aliensPerRow) {
 
 // only move the ship if the game ain't over
 function moveShip() {
-  //const ship = document.getElementById('ship')
-
   let shipPosition = container.offsetWidth / 2 - ship.offsetWidth / 2;
   document.addEventListener("keydown", (event) => {
     const containerWidth = container.offsetWidth;
@@ -193,6 +194,9 @@ function animateBullet(bullet) {
           bullet.remove();
           //scoreAndlives();
           varScore += 10;
+          updateScore()
+          console.log('score ',varScore);
+          
           //return;
         }
       });
@@ -234,9 +238,6 @@ document.addEventListener("keydown", (e) => {
 
 
 /********************************* score and lives logic ******************************************/
-const score = document.querySelector('.score')
-const hearts = document.querySelector('.hearts')
-var heartsCount = 3
 
 function updateScore() {
   score.innerText = `score : ${varScore}`;
@@ -284,6 +285,8 @@ function boming(containerId) {
         const shipRect = ship.getBoundingClientRect();
         if (isColliding(bombRect, shipRect)) {
           heartsCount--
+          updateScore()
+          console.log('hearts count', heartsCount)
           bomb.remove();
         }
       }
@@ -297,7 +300,7 @@ function boming(containerId) {
     requestAnimationFrame(move);
   }
   setInterval(() => {
-    if (Math.random() < 1) {
+    if (Math.random() < 1 && !gamePaused) {
       spawnBomb();
     }
   }, 1000);

@@ -19,7 +19,7 @@ body {
 .alien {
   margin-top: 32px;
   width: 100px;
-  height: 100px; 
+  height: 100px;
   position: absolute;
   left: 0;
   top: 50%;
@@ -29,16 +29,16 @@ body {
 .ship {
   width: 150px;
   position: absolute;
-  bottom: 10px; 
-  left: 50%; 
+  bottom: 10px;
+  left: 50%;
   transform: translateX(-50%);
 }
 
 .bullet {
   position: absolute;
-  width: 10px; 
+  width: 10px;
   height: 20px;
-  z-index: 10; 
+  z-index: 10;
 }
 
 .fps-display {
@@ -52,9 +52,7 @@ body {
 }
 
 .score {
-  position: absolute;
-  top: 10px;
-  left: 10px;
+
   color: white;
   font-family: monospace;
   background: rgba(0, 0, 0, 0.7);
@@ -62,15 +60,31 @@ body {
   border-radius: 4px;
 }
 
-.lives-container {
-  position: absolute;
-  top: 50px;
-  left: 10px;
-  display: flex;
-  gap: 5px;
-}
-
-.heart {
+/* .heart {
   width: 30px;
   height: 30px;
+} */
+
+
+
+.heart {
+  left: 200;
+  width: 30px;
+  height: 30px;
+  filter: drop-shadow(0 0 4px rgba(255, 0, 0, 0.5));
+}
+
+.heartCount {
+  top: 10px;
+  left: 100px;
+  color: aliceblue;
+}
+
+
+.score {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  font-size: large;
+  color: aliceblue;
 }
