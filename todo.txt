@@ -11,3 +11,4 @@ Does the game display the pause menu, with the options: continue and restart?
 - timer/countdown
 
 NOTE : one by one 
+switch score from dom to html

@@ -1,4 +1,3 @@
-import { startFPSCounter } from "./fps.js";
 import { boming } from "./bomb.js";
 
 const container = document.getElementById('container');
@@ -31,7 +30,6 @@ function startGame() {
 function togglePause() {
   if (!gameRunning) return;
   gamePaused = !gamePaused;
-
   console.log(gamePaused ? 'Game Paused' : 'Game Resumed');
 }
 
@@ -41,7 +39,7 @@ document.addEventListener('keydown', (e) => {
   } else if (e.code === 'p' || e.key === 'p') {
     togglePause();
   }
-  if (e.code === 'r' || e.key === 'r') {    
+  if (e.code === 'r' || e.key === 'r') {
     location.reload(true)
     // gameRunning = true
     // startGame();
@@ -49,13 +47,13 @@ document.addEventListener('keydown', (e) => {
 });
 
 /******************************** Aliens logic *************************************/
-export function setupAliens(rows, aliensPerRow, alienImageSrc) {
+ function setupAliens(rows, aliensPerRow, alienImageSrc) {
 
   const aliens = createAliens(rows, aliensPerRow, alienImageSrc);
   animateAliens(aliens, aliensPerRow);
 }
 
-export function createAliens(rows, aliensPerRow, alienImageSrc) {
+ function createAliens(rows, aliensPerRow, alienImageSrc) {
   const alienWidth = 32;
   const alienHeight = 32;
   const aliens = [];
@@ -78,7 +76,7 @@ export function createAliens(rows, aliensPerRow, alienImageSrc) {
   return aliens;
 }
 
-export function animateAliens(aliens, aliensPerRow) {
+ function animateAliens(aliens, aliensPerRow) {
   const alienWidth = 32;
   const alienHeight = 32;
   const containerWidth = container.offsetWidth;
@@ -137,7 +135,7 @@ export function animateAliens(aliens, aliensPerRow) {
 // }
 
 // only move the ship if the game ain't over
-export function moveShip() {
+ function moveShip() {
   //const ship = document.getElementById('ship')
 
   let shipPosition = container.offsetWidth / 2 - ship.offsetWidth / 2;
@@ -155,7 +153,7 @@ export function moveShip() {
 }
 /*********************************** bullet logic ************************************/
 
-export function spawnBullet() {
+ function spawnBullet() {
   const ship = document.querySelector(".ship");
   const bullet = document.createElement("img");
   bullet.src = "./style/img/bullet.png";
@@ -230,7 +228,7 @@ document.addEventListener("keydown", (e) => {
 
 
 /********************************* score and lives logic ******************************************/
-export function scoreAndlives() {
+ function scoreAndlives() {
   const score = document.createElement("div");
   score.className = "score";
   score.innerText = `score : ${varScore}`;
@@ -250,6 +248,51 @@ export function scoreAndlives() {
 
   container.appendChild(score);
   container.appendChild(livesContainer);
+}
+/**************************************** fps calculating ********************************************/
+
+function startFPSCounter() {
+  const container = document.getElementById('container');
+
+  /*const start = performance.now();
+  for (let i = 0; i < 100000; i++) { console.log('oh no') };
+  const end = performance.now();
+  console.log(end - start, 'ms')
+  */
+
+  let frames = 0;
+  let lastTime = performance.now();
+  let fpsHistory = [];
+  const historySize = 60;
+
+  const fps = document.createElement("div");
+  fps.className = "fps-display";
+  container.appendChild(fps);
+
+  function updateFPS() {
+    const now = performance.now();
+    const deltaTime = now - lastTime;
+    frames++;
+
+    if (deltaTime >= 500) {
+      const currentFPS = Math.round((frames * 1000) / deltaTime);
+      fpsHistory.push(currentFPS);
+      if (fpsHistory.length > historySize) fpsHistory.shift();
+
+      const averageFPS = Math.round(
+        fpsHistory.reduce((sum, fps) => sum + fps, 0) / fpsHistory.length
+      );
+
+      fps.textContent = `FPS: ${currentFPS}, Average: ${averageFPS}`;
+
+      frames = 0;
+      lastTime = now;
+    }
+
+    requestAnimationFrame(updateFPS);
+  }
+
+  updateFPS();
 }
 
 // function gameOver(container) {
