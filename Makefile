@@ -1,9 +1,11 @@
 m ?= "Update"
+e ?= ""
+u ?= ""
 
 config:
 	git config --global credential.helper store
-	git config --global user.email "elmalkiahmed02@gmail.coml"
-	git config --global user.name "Ahmedelmalki"
+	git config --global user.email "$(e)"
+	git config --global user.name "$(u)"
 
 push:
 	git add .
