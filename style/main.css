@@ -41,7 +41,7 @@ body {
   z-index: 10;
 }
 
-.fps-display {
+/* .fps-display {
   position: fixed;
   top: 10px;
   right: 10px;
@@ -49,5 +49,5 @@ body {
   color: white;
   padding: 5px;
   font-family: monospace;
-}
+} */
 

@@ -48,11 +48,10 @@ function startGame() {
   moveShip();
   setupAliens(3, 8, "./style/img/alien.png");
   spawnBullet();
-  boming("container");
-  startFPSCounter();
   ship.style.display = 'block'
   menu.style.display = 'none';
   start.style.display = 'none';
+  game_over.style.display = 'none'
 }
 
 function togglePause() {
@@ -268,108 +267,5 @@ function updateScore() {
   score.innerText = `score : ${varScore}`;
   hearts.innerText = `${heartsCount}`
 }
-
-/**************************************** bombs logic **********************************/
-function boming(containerId) {
-  const container = document.getElementById(containerId);
-  if (!containerId) {
-    console.error(`Container with id "${containerId}" not found.`);
-    return;
-  }
-
-  function spawnBomb() {
-    const aliens = document.querySelectorAll(".alien");
-    if (aliens.length === 0) {
-      return;
-    }
-    const randomAlien = aliens[Math.floor(Math.random() * aliens.length)];
-    const alienRect = randomAlien.getBoundingClientRect();
-    const containerRect = container.getBoundingClientRect();
-
-    const bomb = document.createElement("img");
-    bomb.src = "/style/img/bomb.png";
-    bomb.alt = "Bomb";
-    bomb.classList.add("bomb");
-    bomb.style.cssText = `
-      position: absolute;
-      width: 20px;
-      height: 20px;
-      left: ${alienRect.left - containerRect.left + alienRect.width / 2}px;
-      top: ${alienRect.top - containerRect.top + alienRect.height}px;
-    `;
-    container.appendChild(bomb);
-    animateBomb(bomb);
-  }
-
-  function animateBomb(bomb) {
-    function move() {
-      const bombRect = bomb.getBoundingClientRect();
-      const containerRect = container.getBoundingClientRect();
-      const ship = document.querySelector(".ship");
-      if (ship) {
-        const shipRect = ship.getBoundingClientRect();
-        if (isColliding(bombRect, shipRect)) {
-          heartsCount--
-          updateScore()
-          gameOver()
-          console.log('hearts count', heartsCount)
-          bomb.remove();
-        }
-      }
-      if (bombRect.top >= containerRect.bottom) {
-        bomb.remove();
-      } else {
-        bomb.style.top = `${parseInt(bomb.style.top, 10) + 5}px`;
-        requestAnimationFrame(move);
-      }
-    }
-    requestAnimationFrame(move);
-  }
-  setInterval(() => {
-    if (Math.random() < 1 && !gamePaused) {
-      spawnBomb();
-    }
-  }, 1000);
-}
-
-/**************************************** fps calculating ********************************************/
-
-function startFPSCounter() {
-  let frames = 0;
-  let lastTime = performance.now();
-  let fpsHistory = [];
-  const historySize = 60;
-
-  const fps = document.createElement("div");
-  fps.className = "fps-display";
-  container.appendChild(fps);
-
-  function updateFPS() {
-    const now = performance.now();
-    const deltaTime = now - lastTime;
-    frames++;
-
-    if (deltaTime >= 500) {
-      const currentFPS = Math.round((frames * 1000) / deltaTime);
-      fpsHistory.push(currentFPS);
-      if (fpsHistory.length > historySize) fpsHistory.shift();
-
-      const averageFPS = Math.round(
-        fpsHistory.reduce((sum, fps) => sum + fps, 0) / fpsHistory.length
-      );
-
-      fps.textContent = `FPS: ${currentFPS}, Average: ${averageFPS}`;
-
-      frames = 0;
-      lastTime = now;
-    }
-
-    requestAnimationFrame(updateFPS);
-  }
-
-  updateFPS();
-}
-
-
 
 // xrandr --output HDMI-1 --mode 1920x1080 --rate 50.00
