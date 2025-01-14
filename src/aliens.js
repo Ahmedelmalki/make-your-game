@@ -1,18 +1,21 @@
+/************************* global vars ****************************/
+
 const container = document.getElementById('container');
 const ship = document.getElementById('ship')
 const game_over = document.getElementById('game-over-container')
+const game_won = document.getElementById('game-won-container')
 ship.style.display = 'none'
 game_over.style.display = 'none'
 const score = document.querySelector('.score')
 const hearts = document.querySelector('.heartsCount')
 var varScore = 0;
 let heartsCount = 3
-
-/************************************ pause menu logic ***********************************/
 let gameRunning = false;
 let gamePaused = false;
 const start = document.querySelector('.start')
 const menu = document.querySelector('.menu')
+
+/************************************ pause menu logic ***********************************/
 
 function restartGame() {
   const aliens = document.querySelectorAll('.alien');
@@ -78,14 +81,33 @@ document.addEventListener('keydown', (e) => {
 /**************************** game over logic *****************************/
 function gameOver() {
   if (heartsCount === 0) {
+    const aliens = document.querySelectorAll('.alien');
+    const bullets = document.querySelectorAll('.bullet');
+    const bombs = document.querySelectorAll('.bomb');
     gameRunning = false;
     gamePaused = false;
 
     game_over.style.display = 'block';
 
+
+    aliens.forEach(alien => alien.remove());
+    bullets.forEach(bullet => bullet.remove());
+    bombs.forEach(bomb => bomb.remove());
+
+    ship.style.display = 'none';
+  }
+}
+
+function gameWon() {
+  if (aliens.length === 0) {
     const aliens = document.querySelectorAll('.alien');
     const bullets = document.querySelectorAll('.bullet');
     const bombs = document.querySelectorAll('.bomb');
+    gameRunning = false;
+    gamePaused = false;
+
+    game_won.style.display = 'block';
+
 
     aliens.forEach(alien => alien.remove());
     bullets.forEach(bullet => bullet.remove());
@@ -192,7 +214,7 @@ function moveShip() {
 
 function spawnBullet() {
   const bullet = document.createElement("img");
-  bullet.src = "./style/img/bullet.png";
+  bullet.src = "./style/img/Laser.png";
   bullet.alt = "Bullet";
   bullet.classList.add("bullet");
 
@@ -224,6 +246,11 @@ function animateBullet(bullet) {
           updateScore()
         }
       });
+
+      const remainingAliens = document.querySelectorAll(".alien");
+      if (remainingAliens.length === 0) {
+        gameWon();
+      }
 
       const currentTop = parseInt(bullet.style.top, 10);
       if (currentTop <= 0) {
