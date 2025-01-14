@@ -1,6 +1,8 @@
 const container = document.getElementById('container');
 const ship = document.getElementById('ship')
+const game_over = document.getElementById('game-over-container')
 ship.style.display = 'none'
+game_over.style.display = 'none'
 const score = document.querySelector('.score')
 const hearts = document.querySelector('.heartsCount')
 var varScore = 0;
@@ -24,9 +26,14 @@ function restartGame() {
   ship.style.left = '50%';
   ship.style.transform = 'translateX(-50%)';
   ship.style.display = 'none';
+  game_over.style.display = 'none'
+
   // why is it not changing
   varScore = 0
   heartsCount = 3
+
+  score.textContent = varScore;
+  hearts.textContent = heartsCount;
 
   gameRunning = false;
   gamePaused = false;
@@ -43,7 +50,6 @@ function startGame() {
   spawnBullet();
   boming("container");
   startFPSCounter();
-  //updateScore()
   ship.style.display = 'block'
   menu.style.display = 'none';
   start.style.display = 'none';
@@ -66,6 +72,29 @@ document.addEventListener('keydown', (e) => {
     startGame();
   }
 });
+
+
+
+
+/**************************** game over logic *****************************/
+function gameOver() {
+  if (heartsCount === 0) {
+    gameRunning = false;
+    gamePaused = false;
+
+    game_over.style.display = 'block';
+
+    const aliens = document.querySelectorAll('.alien');
+    const bullets = document.querySelectorAll('.bullet');
+    const bombs = document.querySelectorAll('.bomb');
+
+    aliens.forEach(alien => alien.remove());
+    bullets.forEach(bullet => bullet.remove());
+    bombs.forEach(bomb => bomb.remove());
+
+    ship.style.display = 'none';
+  }
+}
 
 /******************************** Aliens logic *************************************/
 function setupAliens(rows, aliensPerRow, alienImageSrc) {
@@ -122,8 +151,8 @@ function animateAliens(aliens, aliensPerRow) {
 
       if (topOffset + verticalStep > containerHeight) {
         console.log("Aliens have reached the bottom!");
-        // gameOver(container);
-        return;
+        heartsCount--
+        gameOver()
       }
 
       for (let i = 0; i < aliens.length; i++) {
@@ -192,12 +221,8 @@ function animateBullet(bullet) {
         if (isColliding(bulletRect, alienRect)) {
           alien.remove();
           bullet.remove();
-          //scoreAndlives();
           varScore += 10;
           updateScore()
-          console.log('score ',varScore);
-          
-          //return;
         }
       });
 
@@ -225,7 +250,7 @@ function isColliding(rect1, rect2) {
 }
 
 let lastBulletTime = 0;
-const BULLET_COOLDOWN = 100;
+const BULLET_COOLDOWN = 270;
 document.addEventListener("keydown", (e) => {
   if (e.code === "Space") {
     const currentTime = Date.now();
@@ -286,6 +311,7 @@ function boming(containerId) {
         if (isColliding(bombRect, shipRect)) {
           heartsCount--
           updateScore()
+          gameOver()
           console.log('hearts count', heartsCount)
           bomb.remove();
         }
@@ -344,38 +370,6 @@ function startFPSCounter() {
   updateFPS();
 }
 
-// function gameOver(container) {
-//   const game_over = document.createElement('div')
-//   game_over.className = 'game_over'
-//   game_over.style.position = 'absolute';
-//   game_over.style.top = '50%';
-//   game_over.style.left = '50%';
-//   game_over.style.transform = 'translate(-50%, -50%)';
-//   game_over.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
-//   game_over.style.color = 'white';
-//   game_over.style.fontSize = '2em';
-//   game_over.style.padding = '20px';
-//   game_over.style.borderRadius = '10px';
-//   game_over.style.textAlign = 'center';
-//   game_over.style.zIndex = '1000';
-//   game_over.textContent = 'Game Over';
-//   container.appendChild(game_over);
-// }
 
-// function won(container) {
-//   const WON = document.createElement('div')
-//   WON.className = 'WON'
-//   WON.style.position = 'absolute';
-//   WON.style.top = '50%';
-//   WON.style.left = '50%';
-//   WON.style.transform = 'translate(-50%, -50%)';
-//   WON.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
-//   WON.style.color = 'white';
-//   WON.style.fontSize = '2em';
-//   WON.style.padding = '20px';
-//   WON.style.borderRadius = '10px';
-//   WON.style.textAlign = 'center';
-//   WON.style.zIndex = '1000';
-//   WON.textContent = 'WON';
-//   container.appendChild(WON);
-// }
+
+// xrandr --output HDMI-1 --mode 1920x1080 --rate 50.00

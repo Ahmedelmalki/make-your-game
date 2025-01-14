@@ -1,17 +1,24 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <link rel="stylesheet" href="style/main.css">
   <link rel="stylesheet" href="style/menu.css">
 </head>
+
 <body>
   <div id="container">
     <img src="./style/img/george-wassouf.png" alt="Illustration of the ship" id="ship" class="ship">
     <div class="start">Press 'S' to start</div>
-      <div class="score">Score: 0</div>
-      <img src="./style/img/heart.png" alt="Heart" class="heart">
-      <span class="heartsCount">3</span>
+    <div class="score">Score: 0</div>
+    <img src="./style/img/heart.png" alt="Heart" class="heart">
+    <span class="heartsCount">3</span>
+    <div id="game-over-container">
+      <h1 class="game-over">Game Over</h1>
+      <span class="R">Press R to Play Again</span>
+    </div>
     <script type="module" src="src/aliens.js"></script>
   </div>
 </body>
+
 </html>

@@ -12,3 +12,5 @@ Does the game display the pause menu, with the options: continue and restart?
 
 NOTE : one by one 
 switch score from dom to html
+
+change all queryselecter with get element by id

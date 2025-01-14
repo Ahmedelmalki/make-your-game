@@ -11,3 +11,50 @@
     align-items: center;
     background-color: azure;
 }
+
+.heartsCount {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: azure;
+}
+
+.heart {
+    right: 50%;
+    width: 30px;
+    height: 30px;
+    filter: drop-shadow(0 0 4px rgba(255, 0, 0, 0.5));
+}
+
+.score {
+    background: rgba(0, 0, 0, 0.7);
+    padding: 5px;
+    border-radius: 4px;
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    font-size: large;
+    color: aliceblue;
+}
+
+ #game-over-container {
+     display: flex;
+     flex-direction: column;
+     align-items: center;
+     justify-content: center;
+     height: 100vh;
+     /* Full screen height */
+     text-align: center;
+ }
+
+ .game-over {
+     font-size: 5rem;
+     font-weight: bold;
+     color: red;
+ }
+
+ .R {
+     font-size: 1.5rem;
+     margin-top: 1rem;
+     color: gray;
+ }
