@@ -6,16 +6,16 @@ const game_won = document.getElementById('game-won-container')
 ship.style.display = 'none'
 game_over.style.display = 'none'
 game_won.style.display = 'none';
-const score = document.querySelector('.score')
-const hearts = document.querySelector('.heartsCount')
-// gotta move this shit from 
+const score = document.getElementById('score')
+const hearts = document.getElementById('heartsCount')
+
 var varScore = 0;
 let heartsCount = 3
 let gameRunning = false;
 let gamePaused = false;
 let gameEnded = false;
-const start = document.querySelector('.start')
-//const menu = document.querySelector('.menu')
+const start = document.getElementById('start')
+
 
 /************************************ pause menu logic ***********************************/
 function restartGame() {
@@ -27,7 +27,6 @@ function restartGame() {
   game_won.style.display = 'none';
 
 
-  // why is it not changing
   varScore = 0
   heartsCount = 3
 
@@ -36,7 +35,7 @@ function restartGame() {
 
   gameRunning = false;
   gamePaused = false;
-  gameEnded=false;
+  gameEnded = false;
 }
 
 function startGame() {
@@ -50,7 +49,6 @@ function startGame() {
   setupAliens(1, 8, "./style/img/alien.png");
   spawnBullet();
   ship.style.display = 'block'
-  // menu.style.display = 'none';
   start.style.display = 'none';
   game_over.style.display = 'none'
 }
@@ -60,22 +58,15 @@ function togglePause() {
   gamePaused = !gamePaused;
   console.log(gamePaused ? 'Game Paused' : 'Game Resumed');
 }
-// events
-// document.addEventListener('keydown', (e) => {
-//   if (e.code === 's' || e.key === 's') {
-//     startGame();
-//   } else if (e.code === 'p' || e.key === 'p') {
-//     togglePause();
-//   }
-//   if (e.code === 'r' || e.key === 'r') {
-//     restartGame()
-//     startGame();
-//   }
-// });
 
 let lastBulletTime = 0;
 const BULLET_COOLDOWN = 50;
-document.addEventListener("keydown", (e) => {
+
+
+function cleanEventListeners() {
+  document.removeEventListener("keydown", handleKeyDown);
+}
+function handleKeyDown(e) {
   if (e.key === "s") startGame();
   if (e.key === "p") togglePause();
   if (e.key === "r") {
@@ -83,16 +74,18 @@ document.addEventListener("keydown", (e) => {
     startGame();
   }
   if (e.key === " ") {
+    if (gamePaused || !gameRunning) return;
     const currentTime = Date.now();
     if (currentTime - lastBulletTime >= BULLET_COOLDOWN) {
       spawnBullet();
       lastBulletTime = currentTime;
     }
   }
-});
+}
+
+document.addEventListener("keydown", handleKeyDown);
 
 /**************************** game over logic *****************************/
-//cleaning
 function Clean() {
   const aliens = document.querySelectorAll('.alien');
   const bullets = document.querySelectorAll('.bullet');
@@ -211,6 +204,7 @@ function animateAliens(aliens, aliensPerRow) {
 function moveShip(container) {
   let shipPosition = container.offsetWidth / 2 - ship.offsetWidth / 2;
   document.addEventListener("keydown", (event) => {
+    if (gamePaused || !gameRunning) return;
     const containerWidth = container.offsetWidth;
 
     if (event.key === "ArrowLeft" && shipPosition > 0) {
@@ -223,7 +217,6 @@ function moveShip(container) {
   });
 }
 /*********************************** bullet logic ************************************/
-const here = performance.now()
 function spawnBullet() {
   const container = document.getElementById('container');
   const bullet = document.createElement("img");
@@ -290,21 +283,6 @@ function isColliding(rect1, rect2) {
   );
 }
 
-// let lastBulletTime = 0;
-// const BULLET_COOLDOWN = 270;
-// document.addEventListener("keydown", (e) => {
-//   if (e.code === "Space") {
-//     const currentTime = Date.now();
-//     if (currentTime - lastBulletTime >= BULLET_COOLDOWN) {
-//       spawnBullet();
-//       lastBulletTime = currentTime;
-//     }
-//   }
-// });
-console.log(performance.now() - here, 'ms');
-
-
-
 /********************************* score and lives logic ******************************************/
 
 function updateScore() {
@@ -312,4 +290,3 @@ function updateScore() {
   hearts.innerText = `hearts : ${heartsCount}`
 }
 
-// xrandr --output HDMI-1 --mode 1920x1080 --rate 50.00
