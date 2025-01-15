@@ -1,35 +1,31 @@
 /************************* global vars ****************************/
-
-const container = document.getElementById('container');
+// no global vars
 const ship = document.getElementById('ship')
 const game_over = document.getElementById('game-over-container')
 const game_won = document.getElementById('game-won-container')
 ship.style.display = 'none'
 game_over.style.display = 'none'
+game_won.style.display = 'none';
 const score = document.querySelector('.score')
 const hearts = document.querySelector('.heartsCount')
+// gotta move this shit from 
 var varScore = 0;
 let heartsCount = 3
 let gameRunning = false;
 let gamePaused = false;
+let gameEnded = false;
 const start = document.querySelector('.start')
-const menu = document.querySelector('.menu')
+//const menu = document.querySelector('.menu')
 
 /************************************ pause menu logic ***********************************/
-
 function restartGame() {
-  const aliens = document.querySelectorAll('.alien');
-  const bullets = document.querySelectorAll('.bullet');
-  const bombs = document.querySelectorAll('.bomb');
-
-  aliens.forEach(alien => alien.remove());
-  bullets.forEach(bullet => bullet.remove());
-  bombs.forEach(bomb => bomb.remove());
-
+  Clean()
   ship.style.left = '50%';
   ship.style.transform = 'translateX(-50%)';
   ship.style.display = 'none';
   game_over.style.display = 'none'
+  game_won.style.display = 'none';
+
 
   // why is it not changing
   varScore = 0
@@ -40,19 +36,21 @@ function restartGame() {
 
   gameRunning = false;
   gamePaused = false;
+  gameEnded=false;
 }
 
 function startGame() {
   if (gameRunning) return;
 
+  const container = document.getElementById('container');
   gameRunning = true;
   gamePaused = false;
 
-  moveShip();
-  setupAliens(3, 8, "./style/img/alien.png");
+  moveShip(container);
+  setupAliens(1, 8, "./style/img/alien.png");
   spawnBullet();
   ship.style.display = 'block'
-  menu.style.display = 'none';
+  // menu.style.display = 'none';
   start.style.display = 'none';
   game_over.style.display = 'none'
 }
@@ -62,57 +60,66 @@ function togglePause() {
   gamePaused = !gamePaused;
   console.log(gamePaused ? 'Game Paused' : 'Game Resumed');
 }
+// events
+// document.addEventListener('keydown', (e) => {
+//   if (e.code === 's' || e.key === 's') {
+//     startGame();
+//   } else if (e.code === 'p' || e.key === 'p') {
+//     togglePause();
+//   }
+//   if (e.code === 'r' || e.key === 'r') {
+//     restartGame()
+//     startGame();
+//   }
+// });
 
-document.addEventListener('keydown', (e) => {
-  if (e.code === 's' || e.key === 's') {
+let lastBulletTime = 0;
+const BULLET_COOLDOWN = 50;
+document.addEventListener("keydown", (e) => {
+  if (e.key === "s") startGame();
+  if (e.key === "p") togglePause();
+  if (e.key === "r") {
+    restartGame();
     startGame();
-  } else if (e.code === 'p' || e.key === 'p') {
-    togglePause();
   }
-  if (e.code === 'r' || e.key === 'r') {
-    restartGame()
-    startGame();
+  if (e.key === " ") {
+    const currentTime = Date.now();
+    if (currentTime - lastBulletTime >= BULLET_COOLDOWN) {
+      spawnBullet();
+      lastBulletTime = currentTime;
+    }
   }
 });
 
-
-
-
 /**************************** game over logic *****************************/
+//cleaning
+function Clean() {
+  const aliens = document.querySelectorAll('.alien');
+  const bullets = document.querySelectorAll('.bullet');
+  const bombs = document.querySelectorAll('.bomb');
+  aliens.forEach(alien => alien.remove());
+  bullets.forEach(bullet => bullet.remove());
+  bombs.forEach(bomb => bomb.remove());
+}
+
 function gameOver() {
   if (heartsCount === 0) {
-    const aliens = document.querySelectorAll('.alien');
-    const bullets = document.querySelectorAll('.bullet');
-    const bombs = document.querySelectorAll('.bomb');
+    Clean()
     gameRunning = false;
     gamePaused = false;
-
+    gameEnded = true;
     game_over.style.display = 'block';
-
-
-    aliens.forEach(alien => alien.remove());
-    bullets.forEach(bullet => bullet.remove());
-    bombs.forEach(bomb => bomb.remove());
-
     ship.style.display = 'none';
   }
 }
 
 function gameWon() {
-  if (aliens.length === 0) {
-    const aliens = document.querySelectorAll('.alien');
-    const bullets = document.querySelectorAll('.bullet');
-    const bombs = document.querySelectorAll('.bomb');
+  if (document.querySelectorAll('.alien').length === 0) {
+    Clean()
     gameRunning = false;
     gamePaused = false;
-
+    gameEnded = true;
     game_won.style.display = 'block';
-
-
-    aliens.forEach(alien => alien.remove());
-    bullets.forEach(bullet => bullet.remove());
-    bombs.forEach(bomb => bomb.remove());
-
     ship.style.display = 'none';
   }
 }
@@ -125,6 +132,7 @@ function setupAliens(rows, aliensPerRow, alienImageSrc) {
 }
 
 function createAliens(rows, aliensPerRow, alienImageSrc) {
+  const container = document.getElementById('container');
   const alienWidth = 32;
   const alienHeight = 32;
   const aliens = [];
@@ -153,7 +161,7 @@ function animateAliens(aliens, aliensPerRow) {
   const containerWidth = container.offsetWidth;
   const containerHeight = container.offsetHeight;
 
-  const speed = 5;
+  const speed = 8;
   const verticalStep = alienHeight + 20;
 
   let position = 0;
@@ -172,8 +180,12 @@ function animateAliens(aliens, aliensPerRow) {
 
       if (topOffset + verticalStep > containerHeight) {
         console.log("Aliens have reached the bottom!");
-        heartsCount--
-        gameOver()
+        heartsCount--;
+        updateScore();
+        if (heartsCount === 0) {
+          gameOver();
+          return;
+        }
       }
 
       for (let i = 0; i < aliens.length; i++) {
@@ -196,7 +208,7 @@ function animateAliens(aliens, aliensPerRow) {
 /********************************* ship logic ****************************************/
 
 // only move the ship if the game ain't over
-function moveShip() {
+function moveShip(container) {
   let shipPosition = container.offsetWidth / 2 - ship.offsetWidth / 2;
   document.addEventListener("keydown", (event) => {
     const containerWidth = container.offsetWidth;
@@ -211,8 +223,9 @@ function moveShip() {
   });
 }
 /*********************************** bullet logic ************************************/
-
+const here = performance.now()
 function spawnBullet() {
+  const container = document.getElementById('container');
   const bullet = document.createElement("img");
   bullet.src = "./style/img/Laser.png";
   bullet.alt = "Bullet";
@@ -253,7 +266,9 @@ function animateBullet(bullet) {
       }
 
       const currentTop = parseInt(bullet.style.top, 10);
-      if (currentTop <= 0) {
+      if (currentTop <= 0 || !bullet.parentNode) {
+        console.log(bullet);
+
         bullet.remove();
       } else {
         bullet.style.top = `${currentTop - 5}px`;
@@ -275,24 +290,26 @@ function isColliding(rect1, rect2) {
   );
 }
 
-let lastBulletTime = 0;
-const BULLET_COOLDOWN = 270;
-document.addEventListener("keydown", (e) => {
-  if (e.code === "Space") {
-    const currentTime = Date.now();
-    if (currentTime - lastBulletTime >= BULLET_COOLDOWN) {
-      spawnBullet();
-      lastBulletTime = currentTime;
-    }
-  }
-});
+// let lastBulletTime = 0;
+// const BULLET_COOLDOWN = 270;
+// document.addEventListener("keydown", (e) => {
+//   if (e.code === "Space") {
+//     const currentTime = Date.now();
+//     if (currentTime - lastBulletTime >= BULLET_COOLDOWN) {
+//       spawnBullet();
+//       lastBulletTime = currentTime;
+//     }
+//   }
+// });
+console.log(performance.now() - here, 'ms');
+
 
 
 /********************************* score and lives logic ******************************************/
 
 function updateScore() {
   score.innerText = `score : ${varScore}`;
-  hearts.innerText = `${heartsCount}`
+  hearts.innerText = `hearts : ${heartsCount}`
 }
 
 // xrandr --output HDMI-1 --mode 1920x1080 --rate 50.00
