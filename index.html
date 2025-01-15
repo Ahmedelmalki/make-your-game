@@ -9,8 +9,12 @@
 
 <body>
   <div id="container">
+    <audio id="gameAudio" loop>
+      <source src="style/audio/VsauceSoundEffect.mp3" type="audio/mpeg">
+      Your browser does not support the audio element.
+    </audio>
     <img src="./style/img/george-wassouf.png" alt="Illustration of the ship" id="ship" class="ship">
-     <div class="start" id="start">Press 'S' to start</div>
+    <div class="start" id="start">Press 'S' to start</div>
     <div class="score" id="score">Score : 0</div>
     <span class="heartsCount" id="heartsCount">Hearts : 3</span>
     <div id="game-over-container">
@@ -21,10 +25,10 @@
       <h1 class="game-won">WON !</h1>
       <span class="R">Press R to Play Again</span>
     </div>
-      <div class="menu" id="menu">
-        <p>Press 'R' to Restart</p>
-        <p>Press 'C' to Continue</p>
-      </div>
+    <div class="menu" id="menu">
+      <p>Press 'R' to Restart</p>
+      <p>Press 'P' to Continue</p>
+    </div>
     <script type="module" src="src/aliens.js"></script>
   </div>
 </body>

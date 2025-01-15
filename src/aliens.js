@@ -15,6 +15,7 @@ let gameRunning = false;
 let gamePaused = false;
 let gameEnded = false;
 const start = document.getElementById('start')
+const gameAudio = document.getElementById('gameAudio');
 
 
 /************************************ pause menu logic ***********************************/
@@ -41,6 +42,8 @@ function restartGame() {
 function startGame() {
   if (gameRunning) return;
 
+  gameAudio.play();
+
   const container = document.getElementById('container');
   gameRunning = true;
   gamePaused = false;
@@ -56,6 +59,13 @@ function startGame() {
 function togglePause() {
   if (!gameRunning) return;
   gamePaused = !gamePaused;
+  if (gamePaused) {
+    menu.style.display = 'block';
+    gameAudio.pause();
+  } else {
+    menu.style.display = 'none';
+    gameAudio.play();
+  }
   console.log(gamePaused ? 'Game Paused' : 'Game Resumed');
 }
 
@@ -162,7 +172,7 @@ function animateAliens(aliens, aliensPerRow) {
   let topOffset = 0;
 
   function animate() {
-    if (!gamePaused) {
+    if (!gamePaused && gameRunning && !gameEnded) {
       position += speed * direction;
 
       const rightmost = position + aliensPerRow * (alienWidth + 10) - 10;
@@ -173,8 +183,11 @@ function animateAliens(aliens, aliensPerRow) {
 
       if (topOffset + verticalStep > containerHeight) {
         console.log("Aliens have reached the bottom!");
-        heartsCount--;
-        updateScore();
+        if (heartsCount > 0) {
+          heartsCount--;
+          updateScore();
+          topOffset = 0;
+        }
         if (heartsCount === 0) {
           gameOver();
           return;

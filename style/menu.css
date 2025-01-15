@@ -1,8 +1,15 @@
 .menu {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
+    display: none;
+    /* Add any other styling you want for the menu here */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    background-color: rgba(0, 0, 0, 0.8);
+    padding: 20px;
+    border-radius: 10px;
+    color: white;
 }
 
 .start {
