@@ -3,6 +3,7 @@ body {
   height: 100%;
   margin: 0;
   position: relative;
+  background:black;
 }
 
 #container {
@@ -11,7 +12,6 @@ body {
   position: absolute;
   width: 100vw;
   height: 100vh;
-  background-color: black;
   overflow: hidden;
   transform: translate(-50%, -50%);
 }

@@ -1,0 +1,27 @@
+
+.menu {
+    position: fixed; /* Positionner le menu de manière fixe à l'écran */
+    top: 50%; /* Centrer le menu verticalement */
+    left: 50%; /* Centrer le menu horizontalement */
+    transform: translate(-50%, -50%); /* Ajuster pour centrer parfaitement */
+    background-color: rgba(212, 201, 201, 0.7); /* Fond semi-transparent */
+    color:black; /* Texte en blanc */
+    padding: 20px; /* Un peu de marge autour du texte */
+    border-radius: 10px; /* Coins arrondis */
+    text-align: center; /* Centrer le texte */
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Choisir une police simple */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* Ombre douce autour du menu */
+  }
+  
+  /* Style pour les paragraphes */
+  .menu p {
+    margin: 10px 0; /* Espacement entre les lignes */
+    font-size: 18px; /* Taille de la police */
+    font-weight: bold; /* Mettre le texte en gras */
+    cursor: pointer; /* Changer le curseur lorsque l'on survole */
+    transition: color 0.3s; /* Animation douce pour la couleur */
+  }
+  
+  .menu p:hover {
+    color: #FFD700; /* Changer la couleur du texte au survol */
+  }
