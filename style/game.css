@@ -20,8 +20,8 @@ body, html {
   /* Ship */
   #ship {
     position: absolute;
-    bottom: 50px;
-    width: 60px;
+    bottom: 15px;
+    width: 150px;
     transition: transform 0.1s ease-in-out;
   }
   
