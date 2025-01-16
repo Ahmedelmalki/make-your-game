@@ -1,0 +1,50 @@
+#game-won-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh; /* Full screen height */
+    text-align: center;
+    background: radial-gradient(circle, rgba(255, 255, 102, 0.3), rgba(0, 0, 0, 0.9)); /* Glowing radial background */
+    border: 2px solid #ffff66; /* Glowing border */
+    box-shadow: 0 0 20px rgba(255, 255, 102, 0.8), 0 0 50px rgba(255, 255, 102, 0.5); /* Glowing effect */
+    border-radius: 10px;
+    animation: pulseWin 3s infinite alternate; /* Subtle pulsing animation */
+}
+
+.game-won {
+    font-size: 5rem;
+    font-weight: bold;
+    color: #ffff66; /* Neon yellow color */
+    text-shadow: 2px 2px 15px rgba(255, 255, 102, 1), 0 0 30px rgba(255, 255, 102, 1); /* Glowing text */
+    margin: 0;
+    animation: glowTextWin 2s infinite alternate; /* Text glow animation */
+}
+
+.R {
+    font-size: 1.5rem;
+    margin-top: 1rem;
+    color: #cccccc;
+    text-shadow: 1px 1px 10px rgba(204, 204, 204, 0.7); /* Subtle glow for instruction text */
+    font-weight: 500;
+}
+
+/* Keyframes for pulsing background */
+@keyframes pulseWin {
+    0% {
+        box-shadow: 0 0 20px rgba(255, 255, 102, 0.8), 0 0 40px rgba(255, 255, 102, 0.5);
+    }
+    100% {
+        box-shadow: 0 0 30px rgba(255, 255, 102, 1), 0 0 60px rgba(255, 255, 102, 0.7);
+    }
+}
+
+/* Keyframes for glowing text */
+@keyframes glowTextWin {
+    0% {
+        text-shadow: 2px 2px 15px rgba(255, 255, 102, 1), 0 0 30px rgba(255, 255, 102, 1);
+    }
+    100% {
+        text-shadow: 2px 2px 20px rgba(255, 255, 102, 1), 0 0 40px rgba(255, 255, 102, 1);
+    }
+}

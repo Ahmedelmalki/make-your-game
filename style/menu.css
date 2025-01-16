@@ -1,73 +1,114 @@
 .menu {
-    display: none;
-    /* Add any other styling you want for the menu here */
+    display: none; /* Keep it hidden until needed */
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     text-align: center;
-    background-color: rgba(0, 0, 0, 0.8);
-    padding: 20px;
-    border-radius: 10px;
-    color: white;
+    background-color: rgba(0, 0, 0, 0.9); /* Dark background */
+    padding: 25px;
+    border-radius: 8px;
+    color: #00d1ff; /* Neon blue text color */
+    text-shadow: 2px 2px 10px rgba(0, 209, 255, 0.8); /* Glowing text */
+    border: 2px solid #00d1ff; /* Glowing border */
+    box-shadow: 0 0 20px rgba(0, 209, 255, 0.5); /* Outer glow */
+}
+
+.menu p {
+    font-size: 1.5rem;
+    margin: 15px 0;
+    animation: glowText 1.5s infinite alternate; /* Add a glowing animation for menu text */
+}
+
+@keyframes glowText {
+    0% {
+        text-shadow: 2px 2px 10px rgba(0, 209, 255, 0.8);
+    }
+    100% {
+        text-shadow: 2px 2px 20px rgba(0, 209, 255, 1);
+    }
 }
 
 .start {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: azure;
+    background-color: rgba(0, 255, 108, 0.1);
+    color: #00ff6c;
+    text-shadow: 2px 2px 8px rgba(0, 255, 108, 0.8);
+    font-size: 1.8rem;
+    border-radius: 6px;
+    padding: 10px 20px;
+    animation: pulseStart 1.5s infinite alternate;
+}
+
+@keyframes pulseStart {
+    0% {
+        background-color: rgba(0, 255, 108, 0.1);
+    }
+    100% {
+        background-color: rgba(0, 255, 108, 0.3);
+    }
 }
 
 .heartsCount {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: azure;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: #ff4e4e;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 1.2rem;
+    text-shadow: 2px 2px 5px rgba(255, 78, 78, 0.8);
 }
 
 .heart {
-    right: 50%;
     width: 30px;
     height: 30px;
-    filter: drop-shadow(0 0 4px rgba(255, 0, 0, 0.5));
+    filter: drop-shadow(0 0 6px rgba(255, 0, 0, 0.8));
 }
 
 .score {
-    background: rgba(0, 0, 0, 0.7);
-    padding: 5px;
-    border-radius: 4px;
+    background: rgba(0, 0, 0, 0.8);
+    padding: 8px 12px;
+    border-radius: 6px;
     position: absolute;
     top: 10px;
     left: 10px;
-    font-size: large;
-    color: aliceblue;
+    font-size: 1.5rem;
+    color: #00ff6c;
+    text-shadow: 2px 2px 6px rgba(0, 255, 108, 0.8);
+    border: 2px solid #00ff6c;
 }
 
- #game-over-container #game-won-container{
-     display: flex;
-     flex-direction: column;
-     align-items: center;
-     justify-content: center;
-     height: 100vh;
-     /* Full screen height */
-     text-align: center;
- }
+#game-over-container,
+#game-won-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh; /* Full screen height */
+    text-align: center;
+}
 
- .game-over {
-     font-size: 5rem;
-     font-weight: bold;
-     color: red;
- }
+.game-over {
+    font-size: 4rem;
+    font-weight: bold;
+    color: #ff4e4e;
+    text-shadow: 2px 2px 10px rgba(255, 78, 78, 1);
+}
 
- .game-won {
-     font-size: 5rem;
-     font-weight: bold;
-     color: yellow;
- }
+.game-won {
+    font-size: 4rem;
+    font-weight: bold;
+    color: #ffff66;
+    text-shadow: 2px 2px 10px rgba(255, 255, 102, 1);
+}
 
- .R {
-     font-size: 1.5rem;
-     margin-top: 1rem;
-     color: gray;
- }
+.R {
+    font-size: 1.5rem;
+    margin-top: 1rem;
+    color: #999999;
+    text-shadow: 1px 1px 4px rgba(153, 153, 153, 0.8);
+}
