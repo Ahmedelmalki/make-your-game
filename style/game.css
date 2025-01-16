@@ -111,11 +111,18 @@ body, html {
   /* Aliens */
   .alien {
     position: absolute;
-    width: 40px;
+    width: 60px;
     transition: transform 0.1s ease-in-out;
     animation: glow 1.5s infinite alternate;
   }
-  
+  /* @keyframes  {
+    0% {
+      filter: drop-shadow(0 0 10px #00ff6c);
+    }
+    100% {
+      filter: drop-shadow(0 0 15px #00ff6c);
+    }
+  } */
   @keyframes glow {
     0% {
       filter: drop-shadow(0 0 5px #00ff6c);
