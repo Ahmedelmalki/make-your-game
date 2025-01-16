@@ -1,5 +1,4 @@
 /************************* global vars ****************************/
-// no global vars
 const ship = document.getElementById('ship')
 const game_over = document.getElementById('game-over-container')
 const game_won = document.getElementById('game-won-container')
@@ -15,7 +14,9 @@ let gameRunning = false;
 let gamePaused = false;
 let gameEnded = false;
 const start = document.getElementById('start')
-const gameAudio = document.getElementById('gameAudio');
+
+let alienAnimationId = null;
+let bulletAnimationIds = new Set();
 
 
 /************************************ pause menu logic ***********************************/
@@ -42,7 +43,6 @@ function restartGame() {
 function startGame() {
   if (gameRunning) return;
 
-  gameAudio.play();
 
   const container = document.getElementById('container');
   gameRunning = true;
@@ -61,10 +61,8 @@ function togglePause() {
   gamePaused = !gamePaused;
   if (gamePaused) {
     menu.style.display = 'block';
-    gameAudio.pause();
   } else {
     menu.style.display = 'none';
-    gameAudio.play();
   }
   console.log(gamePaused ? 'Game Paused' : 'Game Resumed');
 }
@@ -97,12 +95,20 @@ document.addEventListener("keydown", handleKeyDown);
 
 /**************************** game over logic *****************************/
 function Clean() {
+  if (alienAnimationId) {
+    cancelAnimationFrame(alienAnimationId);
+    alienAnimationId = null;
+  }
+
+  for (const id of bulletAnimationIds) {
+    cancelAnimationFrame(id);
+  }
+  bulletAnimationIds.clear();
+
   const aliens = document.querySelectorAll('.alien');
   const bullets = document.querySelectorAll('.bullet');
-  const bombs = document.querySelectorAll('.bomb');
   aliens.forEach(alien => alien.remove());
   bullets.forEach(bullet => bullet.remove());
-  bombs.forEach(bomb => bomb.remove());
 }
 
 function gameOver() {
@@ -189,6 +195,8 @@ function animateAliens(aliens, aliensPerRow) {
           topOffset = 0;
         }
         if (heartsCount === 0) {
+          cancelAnimationFrame(alienAnimationId);
+          alienAnimationId = null;
           gameOver();
           return;
         }
@@ -205,7 +213,7 @@ function animateAliens(aliens, aliensPerRow) {
       }
     }
 
-    requestAnimationFrame(animate);
+    alienAnimationId = requestAnimationFrame(animate);
   }
 
   animate();
@@ -251,6 +259,7 @@ function spawnBullet() {
 }
 
 function animateBullet(bullet) {
+  let bulletAnimationId;
   function move() {
     if (!gamePaused) {
       const bulletRect = bullet.getBoundingClientRect();
@@ -263,12 +272,18 @@ function animateBullet(bullet) {
           bullet.remove();
           varScore += 10;
           updateScore()
+          cancelAnimationFrame(bulletAnimationId);
+          bulletAnimationIds.delete(bulletAnimationId);
+          return;
         }
       });
 
       const remainingAliens = document.querySelectorAll(".alien");
       if (remainingAliens.length === 0) {
         gameWon();
+        cancelAnimationFrame(bulletAnimationId);
+        bulletAnimationIds.delete(bulletAnimationId);
+        return;
       }
 
       const currentTop = parseInt(bullet.style.top, 10);
@@ -281,10 +296,11 @@ function animateBullet(bullet) {
       }
     }
     if (bullet.parentNode) {
-      requestAnimationFrame(move);
+      bulletAnimationId = requestAnimationFrame(move);
     }
   }
-  requestAnimationFrame(move);
+  bulletAnimationId = requestAnimationFrame(move);
+  bulletAnimationIds.add(bulletAnimationId);
 }
 
 function isColliding(rect1, rect2) {
