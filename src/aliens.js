@@ -210,20 +210,27 @@ function animateAliens(aliens, aliensPerRow) {
         direction *= -1;
         topOffset += verticalStep;
       }
+      // checking if any row has reached the bottom
+      for (let i = 0; i < aliens.length; i++) {
+        const row = Math.floor(i / aliensPerRow);
+        const rowTop = topOffset + row * verticalStep;
 
-      if (topOffset + verticalStep > containerHeight) {
-        console.log("Aliens have reached the bottom!");
-        if (heartsCount > 0) {
-          heartsCount--;
-          updateScore();
-          updateBestScore()
-          topOffset = 0;
-        }
-        if (heartsCount === 0) {
-          cancelAnimationFrame(alienAnimationId);
-          alienAnimationId = null;
-          gameOver();
-          return;
+        if (rowTop + alienHeight > containerHeight) {
+          if (heartsCount > 0) {
+            heartsCount--;
+            updateScore();
+            updateBestScore();
+            topOffset = 0;
+            position = 0; 
+            break; 
+          }
+
+          if (heartsCount === 0) {
+            cancelAnimationFrame(alienAnimationId);
+            alienAnimationId = null;
+            gameOver();
+            return;
+          }
         }
       }
 
