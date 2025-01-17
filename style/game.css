@@ -75,6 +75,7 @@
   }
 
   /* Score and Hearts */
+  .best-score,
   .score,
   .heartsCount {
     position: absolute;
@@ -93,6 +94,8 @@
   .heartsCount {
     right: 10px;
   }
+
+   
 
   /* Start Message */
   .start {

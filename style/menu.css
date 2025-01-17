@@ -1,29 +1,39 @@
 .menu {
-    display: none; /* Keep it hidden until needed */
+    display: none;
+    /* Keep it hidden until needed */
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     text-align: center;
-    background-color: rgba(0, 0, 0, 0.9); /* Dark background */
+    background-color: rgba(0, 0, 0, 0.9);
+    /* Dark background */
     padding: 25px;
     border-radius: 8px;
-    color: #00d1ff; /* Neon blue text color */
-    text-shadow: 2px 2px 10px rgba(0, 209, 255, 0.8); /* Glowing text */
-    border: 2px solid #00d1ff; /* Glowing border */
-    box-shadow: 0 0 20px rgba(0, 209, 255, 0.5); /* Outer glow */
+    color: #00d1ff;
+    /* Neon blue text color */
+    text-shadow: 2px 2px 10px rgba(0, 209, 255, 0.8);
+    /* Glowing text */
+    border: 2px solid #00d1ff;
+    /* Glowing border */
+    box-shadow: 0 0 20px rgba(0, 209, 255, 0.5);
+    /* Outer glow */
+    /* added this so the menu apears above aliens */
+    z-index: 100;
 }
 
 .menu p {
     font-size: 1.5rem;
     margin: 15px 0;
-    animation: glowText 1.5s infinite alternate; /* Add a glowing animation for menu text */
+    animation: glowText 1.5s infinite alternate;
+    /* Add a glowing animation for menu text */
 }
 
 @keyframes glowText {
     0% {
         text-shadow: 2px 2px 10px rgba(0, 209, 255, 0.8);
     }
+
     100% {
         text-shadow: 2px 2px 20px rgba(0, 209, 255, 1);
     }
@@ -46,6 +56,7 @@
     0% {
         background-color: rgba(0, 255, 108, 0.1);
     }
+
     100% {
         background-color: rgba(0, 255, 108, 0.3);
     }
@@ -82,13 +93,27 @@
     border: 2px solid #00ff6c;
 }
 
+.best-score {
+    left: 40%;
+    background: rgba(0, 0, 0, 0.8);
+    padding: 8px 12px;
+    border-radius: 6px;
+    position: absolute;
+    top: 10px;
+    font-size: 1.5rem;
+    color: #c8ff00;
+    text-shadow: 2px 2px 6px rgba(217, 255, 0, 0.8);
+    border: 2px solid #eaff00;
+}
+
 #game-over-container,
 #game-won-container {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: 100vh; /* Full screen height */
+    height: 100vh;
+    /* Full screen height */
     text-align: center;
 }
 

@@ -1,8 +1,12 @@
-irst thing to do today is to move ship and fire at the same time
+best score
 
 
+
+first thing to do today is to move ship and fire at the same time
 - pause menu
 - restart functionality
+
+
 Does the game display the pause menu, with the options: continue and restart?
 +Does the project run quickly and effectively? (Favoring recursive, no unnecessary data requests, etc)
 
