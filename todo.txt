@@ -1,3 +1,6 @@
+irst thing to do today is to move ship and fire at the same time
+
+
 - pause menu
 - restart functionality
 Does the game display the pause menu, with the options: continue and restart?

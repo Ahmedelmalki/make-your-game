@@ -45,15 +45,17 @@ function startGame() {
 
 
   const container = document.getElementById('container');
+  const menu = document.getElementById('menu')
   gameRunning = true;
   gamePaused = false;
 
   moveShip(container);
-  setupAliens(1, 8, "./style/img/alien.png");
+  setupAliens(6, 4);
   spawnBullet();
   ship.style.display = 'block'
   start.style.display = 'none';
   game_over.style.display = 'none'
+  menu.style.display = 'none'
 }
 
 function togglePause() {
@@ -123,24 +125,27 @@ function gameOver() {
 }
 
 function gameWon() {
+  console.log('111111111')
   if (document.querySelectorAll('.alien').length === 0) {
-    Clean()
+    console.log('222222222222');
+    
     gameRunning = false;
     gamePaused = false;
     gameEnded = true;
-    game_won.style.display = 'block';
+    game_won.style.display = 'flex';
     ship.style.display = 'none';
+    Clean()
   }
 }
 
 /******************************** Aliens logic *************************************/
-function setupAliens(rows, aliensPerRow, alienImageSrc) {
+function setupAliens(rows, aliensPerRow) {
 
-  const aliens = createAliens(rows, aliensPerRow, alienImageSrc);
+  const aliens = createAliens(rows, aliensPerRow);
   animateAliens(aliens, aliensPerRow);
 }
 
-function createAliens(rows, aliensPerRow, alienImageSrc) {
+function createAliens(rows, aliensPerRow) {
   const container = document.getElementById('container');
   const alienWidth = 32;
   const alienHeight = 32;
@@ -149,6 +154,16 @@ function createAliens(rows, aliensPerRow, alienImageSrc) {
   for (let row = 0; row < rows; row++) {
     for (let i = 0; i < aliensPerRow; i++) {
       const alien = document.createElement("img");
+      let alienImageSrc = null;
+      if (row === 0) {
+        alienImageSrc = './style/img/enemy1.png';
+      } else if (row === 1) {
+        alienImageSrc = './style/img/enemy2.png';
+      } else if (row === 2) {
+        alienImageSrc = './style/img/enemy3.png';
+      } else {
+        alienImageSrc = './style/img/alien.png';
+      }
       alien.src = alienImageSrc;
       alien.alt = "Illustration of aliens";
       alien.classList.add("alien");
@@ -210,6 +225,7 @@ function animateAliens(aliens, aliensPerRow) {
 
         aliens[i].style.left = `${left}px`;
         aliens[i].style.top = `${top}px`;
+        //aliens[i].style.transform = `translate(${left}px, ${top}px)`;
       }
     }
 
@@ -288,7 +304,7 @@ function animateBullet(bullet) {
 
       const currentTop = parseInt(bullet.style.top, 10);
       if (currentTop <= 0 || !bullet.parentNode) {
-        console.log(bullet);
+       // console.log(bullet);
 
         bullet.remove();
       } else {

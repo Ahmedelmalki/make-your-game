@@ -1,5 +1,6 @@
-/* General Reset */
-body, html {
+  /* General Reset */
+  body,
+  html {
     margin: 0;
     padding: 0;
     height: 100%;
@@ -8,7 +9,7 @@ body, html {
     overflow: hidden;
     color: white;
   }
-  
+
   /* Container Styling */
   #container {
     position: relative;
@@ -16,7 +17,7 @@ body, html {
     height: 90vh;
     overflow: hidden;
   }
-  
+
   /* Ship */
   #ship {
     position: absolute;
@@ -24,9 +25,10 @@ body, html {
     width: 150px;
     transition: transform 0.1s ease-in-out;
   }
-  
+
   /* Game Over and Game Won Containers */
-  #game-over-container, #game-won-container {
+  #game-over-container,
+  #game-won-container {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -44,12 +46,13 @@ body, html {
     color: #ff4e4e;
     text-shadow: 2px 2px 8px rgba(255, 78, 78, 0.8);
   }
-  
-  #game-over-container h1, #game-won-container h1 {
+
+  #game-over-container h1,
+  #game-won-container h1 {
     margin: 0;
     font-size: 2.5rem;
   }
-  
+
   /* Menu */
   .menu {
     display: none;
@@ -65,13 +68,15 @@ body, html {
     color: #00d1ff;
     text-shadow: 2px 2px 8px rgba(0, 209, 255, 0.8);
   }
-  
+
   .menu p {
     margin: 10px 0;
-    font-size: 1.2rem;  }
-  
+    font-size: 1.2rem;
+  }
+
   /* Score and Hearts */
-  .score, .heartsCount {
+  .score,
+  .heartsCount {
     position: absolute;
     top: 10px;
     font-size: 1.2rem;
@@ -80,15 +85,15 @@ body, html {
     border-radius: 5px;
     text-shadow: 2px 2px 5px rgba(255, 255, 255, 0.5);
   }
-  
+
   .score {
     left: 10px;
   }
-  
+
   .heartsCount {
     right: 10px;
   }
-  
+
   /* Start Message */
   .start {
     position: absolute;
@@ -101,13 +106,13 @@ body, html {
     animation: blink 1s infinite;
     cursor: pointer;
   }
-  
+
   @keyframes blink {
     50% {
       opacity: 0.5;
     }
   }
-  
+
   /* Aliens */
   .alien {
     position: absolute;
@@ -115,23 +120,25 @@ body, html {
     transition: transform 0.1s ease-in-out;
     animation: glow 1.5s infinite alternate;
   }
+
   /* @keyframes  {
-    0% {
-      filter: drop-shadow(0 0 10px #00ff6c);
-    }
-    100% {
-      filter: drop-shadow(0 0 15px #00ff6c);
-    }
-  } */
+      0% {
+        filter: drop-shadow(0 0 10px #00ff6c);
+      }
+      100% {
+        filter: drop-shadow(0 0 15px #00ff6c);
+      }
+    } */
   @keyframes glow {
     0% {
       filter: drop-shadow(0 0 5px #00ff6c);
     }
+
     100% {
       filter: drop-shadow(0 0 15px #00ff6c);
     }
   }
-  
+
   /* Bullets */
   .bullet {
     position: absolute;
@@ -141,42 +148,46 @@ body, html {
     border-radius: 50%;
     animation: glowBullet 0.5s infinite alternate;
   }
-  
+
   @keyframes glowBullet {
     0% {
       box-shadow: 0 0 5px rgba(255, 0, 0, 0.8);
     }
+
     100% {
       box-shadow: 0 0 15px rgba(255, 0, 0, 1);
     }
   }
-  
+
   /* Game Audio (Hidden) */
   #audio {
     display: none;
   }
-  
+
   /* Responsive Styling */
   @media (max-width: 768px) {
-    .score, .heartsCount {
+
+    .score,
+    .heartsCount {
       font-size: 1rem;
     }
-  
+
     .start {
       font-size: 1.5rem;
     }
-  
+
     #ship {
       width: 50px;
     }
-  
+
     .alien {
+      left: 0;
+      top: 0;
       width: 30px;
     }
-  
+
     .bullet {
       width: 8px;
       height: 15px;
     }
   }
-  
