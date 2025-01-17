@@ -1,5 +1,4 @@
-best score
-
+best time, with a timer 
 
 
 first thing to do today is to move ship and fire at the same time

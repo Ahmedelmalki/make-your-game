@@ -45,14 +45,14 @@ function restartGame() {
   ship.style.display = 'none';
   game_over.style.display = 'none'
   game_won.style.display = 'none';
-  
-  
+
+
   varScore = 0
   heartsCount = 3
-  
+
   score.textContent = varScore;
   hearts.textContent = heartsCount;
-  
+
   gameRunning = false;
   gamePaused = false;
   gameEnded = false;
@@ -64,11 +64,11 @@ function startGame() {
 
 
   const container = document.getElementById('container');
-  
+
   const menu = document.getElementById('menu')
   gameRunning = true;
   gamePaused = false;
-  
+
   moveShip(container);
   setupAliens(6, 5);
   spawnBullet();
@@ -124,15 +124,14 @@ function Clean() {
 }
 
 function gameOver() {
-  if (heartsCount === 0) {
-    updateBestScore()
-    gameRunning = false;
-    gamePaused = false;
-    gameEnded = true;
-    game_over.style.display = 'block';
-    ship.style.display = 'none';
-    Clean()
-  }
+  updateBestScore()
+  gameRunning = false;
+  gamePaused = false;
+  gameEnded = true;
+  game_over.style.display = 'block';
+  ship.style.display = 'none';
+  hearts.innerText = `hearts : 0`
+  Clean()
 }
 
 function gameWon() {
@@ -194,7 +193,7 @@ function animateAliens(aliens, aliensPerRow) {
   const containerWidth = container.offsetWidth;
   const containerHeight = container.offsetHeight;
 
-  const speed = 8;
+  const speed = 20;
   const verticalStep = alienHeight + 20;
 
   let position = 0;
@@ -216,19 +215,18 @@ function animateAliens(aliens, aliensPerRow) {
         const rowTop = topOffset + row * verticalStep;
 
         if (rowTop + alienHeight > containerHeight) {
-          if (heartsCount > 0) {
+          if (heartsCount > 1) {
             heartsCount--;
             updateScore();
             updateBestScore();
             topOffset = 0;
-            position = 0; 
-            break; 
-          }
-
-          if (heartsCount === 0) {
+            position = 0;
+            break;
+          } else if (heartsCount === 1) {
             cancelAnimationFrame(alienAnimationId);
             alienAnimationId = null;
             gameOver();
+            
             return;
           }
         }
