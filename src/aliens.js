@@ -18,6 +18,8 @@ const start = document.getElementById('start')
 let alienAnimationId = null;
 let bulletAnimationIds = new Set();
 
+let lastBulletTime = 0;
+const BULLET_COOLDOWN = 50;
 
 /************************************ pause menu logic ***********************************/
 function restartGame() {
@@ -31,10 +33,10 @@ function restartGame() {
 
   varScore = 0
   heartsCount = 3
-
+  
   score.textContent = varScore;
   hearts.textContent = heartsCount;
-
+  
   gameRunning = false;
   gamePaused = false;
   gameEnded = false;
@@ -45,12 +47,13 @@ function startGame() {
 
 
   const container = document.getElementById('container');
+  
   const menu = document.getElementById('menu')
   gameRunning = true;
   gamePaused = false;
 
   moveShip(container);
-  setupAliens(6, 4);
+  setupAliens(1, 5);
   spawnBullet();
   ship.style.display = 'block'
   start.style.display = 'none';
@@ -69,8 +72,6 @@ function togglePause() {
   console.log(gamePaused ? 'Game Paused' : 'Game Resumed');
 }
 
-let lastBulletTime = 0;
-const BULLET_COOLDOWN = 50;
 
 
 function cleanEventListeners() {
@@ -82,14 +83,6 @@ function handleKeyDown(e) {
   if (e.key === "r") {
     restartGame();
     startGame();
-  }
-  if (e.key === " ") {
-    if (gamePaused || !gameRunning) return;
-    const currentTime = Date.now();
-    if (currentTime - lastBulletTime >= BULLET_COOLDOWN) {
-      spawnBullet();
-      lastBulletTime = currentTime;
-    }
   }
 }
 
@@ -125,9 +118,7 @@ function gameOver() {
 }
 
 function gameWon() {
-  console.log('111111111')
   if (document.querySelectorAll('.alien').length === 0) {
-    console.log('222222222222');
     
     gameRunning = false;
     gamePaused = false;
@@ -237,21 +228,46 @@ function animateAliens(aliens, aliensPerRow) {
 
 /********************************* ship logic ****************************************/
 
-// only move the ship if the game ain't over
+const keys = {
+  ArrowLeft: false,
+  ArrowRight: false,
+  " ": false
+};
+
 function moveShip(container) {
   let shipPosition = container.offsetWidth / 2 - ship.offsetWidth / 2;
-  document.addEventListener("keydown", (event) => {
-    if (gamePaused || !gameRunning) return;
-    const containerWidth = container.offsetWidth;
 
-    if (event.key === "ArrowLeft" && shipPosition > 0) {
+  document.addEventListener("keydown", (e) => {
+    keys[e.key] = true;
+  });
+
+  document.addEventListener("keyup", (e) => {
+    keys[e.key] = false;
+  });
+
+  function updateShip() {
+    if (gamePaused || !gameRunning) return;
+    
+    const containerWidth = container.offsetWidth;
+    if (keys.ArrowLeft && shipPosition > 0) {
       shipPosition -= 15;
-    } else if (event.key === "ArrowRight" && shipPosition < containerWidth - ship.offsetWidth) {
+    }
+    if (keys.ArrowRight && shipPosition < containerWidth - ship.offsetWidth) {
       shipPosition += 15;
+    }
+    if (keys[" "]) {
+      const currentTime = Date.now();
+      if (currentTime - lastBulletTime >= BULLET_COOLDOWN) {
+        spawnBullet();
+        lastBulletTime = currentTime;
+      }
     }
 
     ship.style.left = `${shipPosition}px`;
-  });
+    requestAnimationFrame(updateShip);
+  }
+
+  requestAnimationFrame(updateShip);
 }
 /*********************************** bullet logic ************************************/
 function spawnBullet() {
