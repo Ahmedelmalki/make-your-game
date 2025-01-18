@@ -1,32 +1,36 @@
-/************************* global vars ****************************/
-// no global vars
-const ship = document.getElementById('ship')
-const game_over = document.getElementById('game-over-container')
-const game_won = document.getElementById('game-won-container')
-ship.style.display = 'none'
-game_over.style.display = 'none'
-game_won.style.display = 'none';
-const score = document.getElementById('score')
-const hearts = document.getElementById('heartsCount')
-
+/************************* global vars and page start ****************************/
+const menu = document.getElementById('menu');
+const ship = document.getElementById('ship');
+const game_over = document.getElementById('game-over-container');
+const game_won = document.getElementById('game-won-container');
+const start_game = document.getElementById('start_game');
+const score = document.getElementById('score');
+const hearts = document.getElementById('heartsCount');
+const gameAudio = document.getElementById('gameAudio');
 var varScore = 0;
-let heartsCount = 3
+let heartsCount = 3;
 let gameRunning = false;
 let gamePaused = false;
 let gameEnded = false;
-const start = document.getElementById('start')
-const gameAudio = document.getElementById('gameAudio');
+let Continue = false;
+start_game.display= 'flex';
+ship.style.display = 'none';
+game_over.style.display = 'none';
+game_won.style.display = 'none';
+menu.style.display = 'none';
 
 
 /************************************ pause menu logic ***********************************/
 function restartGame() {
   Clean()
+  Continue = false;
   ship.style.left = '50%';
   ship.style.transform = 'translateX(-50%)';
   ship.style.display = 'none';
   game_over.style.display = 'none'
   game_won.style.display = 'none';
-  menu.style.display = 'none'
+  menu.style.display = 'none'; 
+  start_game.style.display = 'none';
 
 
   varScore = 0
@@ -41,6 +45,7 @@ function restartGame() {
 }
 
 function startGame() {
+  
   if (gameRunning) return;
 
   gameAudio.play();
@@ -48,26 +53,31 @@ function startGame() {
   const container = document.getElementById('container');
   gameRunning = true;
   gamePaused = false;
+  
 
   moveShip(container);
   setupAliens(1, 8, "./style/img/alien.png");
   spawnBullet();
-  ship.style.display = 'block'
-  start.style.display = 'none';
-  game_over.style.display = 'none'
+  ship.style.display = 'block';
+  start_game.style.display = 'none';
+  game_over.style.display = 'none';
+  menu.style.display = 'none';
 }
 
 function togglePause() {
+
   if (!gameRunning) return;
   gamePaused = !gamePaused;
   if (gamePaused) {
+    Continue = !Continue;     /////////////////    p(click)=>continue = false        
     menu.style.display = 'block';
     gameAudio.pause();
   } else {
+    Continue = false;
+   
     menu.style.display = 'none';
     gameAudio.play();
   }
-  console.log(gamePaused ? 'Game Paused' : 'Game Resumed');
 }
 
 let lastBulletTime = 0;
@@ -77,12 +87,15 @@ const BULLET_COOLDOWN = 50;
 function cleanEventListeners() {
   document.removeEventListener("keydown", handleKeyDown);
 }
+///////////////////////////kyborde
 function handleKeyDown(e) {
   if (e.key === "s") startGame();
-  if (e.key === "p") togglePause();
-  if (e.key === "r" && gamePaused) {
+  if (e.key === "p") togglePause(); //pause game
+  if (e.key === "r" && Continue) {
+    Continue = false;
     restartGame();
     startGame();
+
   }
   if (e.key === " ") {
     if (gamePaused || !gameRunning) return;
@@ -118,6 +131,7 @@ function gameOver() {
 }
 
 function gameWon() {
+  Continue = true;
   if (document.querySelectorAll('.alien').length === 0) {
     Clean()
     gameRunning = false;
