@@ -47,7 +47,7 @@ let startTime = 0;
 let elapsedTime = 0;
 let timerInterval = null;
 
-function updateBestTime() {  
+function updateBestTime() {
   const currentTime = Math.floor(elapsedTime / 1000); // Convert to seconds
   if (currentTime < bestTime) {
     bestTime = currentTime;
@@ -110,7 +110,7 @@ function startGame() {
   requestAnimationFrame(timer);
 
   moveShip(container);
-  setupAliens(6, 5);
+  setupAliens(3, 5);
   spawnBullet();
   ship.style.display = 'block'
   start.style.display = 'none';
@@ -135,9 +135,10 @@ function cleanEventListeners() {
   document.removeEventListener("keydown", handleKeyDown);
 }
 function handleKeyDown(e) {
-  if (e.key === "s") startGame();
-  if (e.key === "p") togglePause();
-  if (e.key === "r") {
+  //if (e.key === "s") startGame();
+  if (e.key === "p") {
+    togglePause();
+  } else if (e.key === "r") {
     restartGame();
     startGame();
   }
@@ -235,7 +236,7 @@ function animateAliens(aliens, aliensPerRow) {
   const containerWidth = container.offsetWidth;
   const containerHeight = container.offsetHeight;
 
-  const speed = 10;
+  const speed = 20;
   const verticalStep = alienHeight + 20;
 
   let position = 0;
