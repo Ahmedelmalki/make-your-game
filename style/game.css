@@ -196,3 +196,89 @@
       height: 15px;
     }
   }
+  /* Responsive Styling for 612px and 312px */
+@media (max-width: 612px) {
+  #container {
+    width: 90%;
+    height: 85vh;
+  }
+
+  .score,
+  .heartsCount,
+  .timer,
+  .best-time,
+  .best-score {
+    font-size: 0.8rem;
+    top: 5px;
+    padding: 4px 8px;
+  }
+
+  .score {
+    left: 5px;
+  }
+
+  .heartsCount {
+    right: 5px;
+  }
+
+  .start {
+    font-size: 1.2rem;
+  }
+
+  #ship {
+    width: 40px;
+    bottom: 10px;
+  }
+
+  .alien {
+    width: 25px;
+  }
+
+  .bullet {
+    width: 6px;
+    height: 12px;
+  }
+}
+
+@media (max-width: 312px) {
+  #container {
+    width: 100%;
+    height: 80vh;
+  }
+
+  .score,
+  .heartsCount,
+  .timer,
+  .best-time,
+  .best-score {
+    font-size: 0.6rem;
+    top: 5px;
+    padding: 3px 6px;
+  }
+
+  .score {
+    left: 5px;
+  }
+
+  .heartsCount {
+    right: 5px;
+  }
+
+  .start {
+    font-size: 1rem;
+  }
+
+  #ship {
+    width: 30px;
+    bottom: 8px;
+  }
+
+  .alien {
+    width: 20px;
+  }
+
+  .bullet {
+    width: 5px;
+    height: 10px;
+  }
+}
