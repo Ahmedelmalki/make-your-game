@@ -26,6 +26,7 @@ function restartGame() {
   ship.style.display = 'none';
   game_over.style.display = 'none'
   game_won.style.display = 'none';
+  menu.style.display = 'none'
 
 
   varScore = 0
@@ -79,7 +80,7 @@ function cleanEventListeners() {
 function handleKeyDown(e) {
   if (e.key === "s") startGame();
   if (e.key === "p") togglePause();
-  if (e.key === "r") {
+  if (e.key === "r" && gamePaused) {
     restartGame();
     startGame();
   }
