@@ -53,14 +53,14 @@ body {
   font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Choisir une police simple */
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* Ombre douce autour du menu */
 }
+#start_game h1  {
+  margin: 10px 0; /* Espacement entre les lignes */
+  font-size: 18px; /* Taille de la police */
+  font-weight: bold; /* Mettre le texte en gras */
+  cursor:pointer; /* Changer le curseur lorsque l'on survole */
+  transition: color 0.3s; /* Animation douce pour la couleur */
+}
 
-/* .fps-display {
-  position: fixed;
-  top: 10px;
-  right: 10px;
-  background: rgba(0, 29, 126, 0.7);
-  color: white;
-  padding: 5px;
-  font-family: monospace;
-} */
-
+#start_game h1:hover {
+  color: #fffb00; /* Changer la couleur du texte au survol */
+}
