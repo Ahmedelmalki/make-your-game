@@ -19,7 +19,7 @@ let alienAnimationId = null;
 let bulletAnimationIds = new Set();
 
 let lastBulletTime = 0;
-const BULLET_COOLDOWN = 150;
+const BULLET_COOLDOWN = 100;
 
 const shootSound = document.getElementById('shoot')
 
@@ -36,10 +36,46 @@ function updateBestScore() {
     bestScoreDisplay.textContent = `Best Score: ${bestScore}`;
   }
 }
+/*****************best time logic***************/
+const bestTimeDisplay = document.getElementById('best-time')
+const displayTime = document.getElementById('timer')
+
+let bestTime = parseInt(localStorage.getItem('bestTime')) || Infinity;
+bestTimeDisplay.textContent = `Best Time: ${bestTime}`
+
+let startTime = 0;
+let elapsedTime = 0;
+let timerInterval = null;
+
+function updateBestTime() {  
+  const currentTime = Math.floor(elapsedTime / 1000); // Convert to seconds
+  if (currentTime < bestTime) {
+    bestTime = currentTime;
+    localStorage.setItem('bestTime', bestTime);
+    bestTimeDisplay.textContent = `Best Time: ${formatTime(bestTime)}`;
+  }
+}
+
+function formatTime(seconds) {
+  const minutes = Math.floor(seconds / 60);
+  const remainingSeconds = seconds % 60;
+  return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
+}
+
+function timer() {
+  if (!gamePaused && gameRunning) {
+    const currentTime = Date.now();
+    elapsedTime = currentTime - startTime;
+    displayTime.textContent = `${formatTime(Math.floor(elapsedTime / 1000))}`;
+  }
+  requestAnimationFrame(timer);
+}
 
 /************************************ pause menu logic ***********************************/
 function restartGame() {
   bestScoreDisplay.textContent = `Best Score: ${bestScore}`;
+  bestTimeDisplay.textContent = `Best Time: ${formatTime(bestTime)}`;
+
   ship.style.left = '50%';
   ship.style.transform = 'translateX(-50%)';
   ship.style.display = 'none';
@@ -68,6 +104,10 @@ function startGame() {
   const menu = document.getElementById('menu')
   gameRunning = true;
   gamePaused = false;
+
+  startTime = Date.now();
+  elapsedTime = 0;
+  requestAnimationFrame(timer);
 
   moveShip(container);
   setupAliens(6, 5);
@@ -125,6 +165,7 @@ function Clean() {
 
 function gameOver() {
   updateBestScore()
+  updateBestTime()
   gameRunning = false;
   gamePaused = false;
   gameEnded = true;
@@ -137,6 +178,7 @@ function gameOver() {
 function gameWon() {
   if (document.querySelectorAll('.alien').length === 0) {
     updateBestScore()
+    updateBestTime()
     gameRunning = false;
     gamePaused = false;
     gameEnded = true;
@@ -193,7 +235,7 @@ function animateAliens(aliens, aliensPerRow) {
   const containerWidth = container.offsetWidth;
   const containerHeight = container.offsetHeight;
 
-  const speed = 20;
+  const speed = 10;
   const verticalStep = alienHeight + 20;
 
   let position = 0;
@@ -226,7 +268,7 @@ function animateAliens(aliens, aliensPerRow) {
             cancelAnimationFrame(alienAnimationId);
             alienAnimationId = null;
             gameOver();
-            
+
             return;
           }
         }

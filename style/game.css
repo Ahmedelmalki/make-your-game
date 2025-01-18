@@ -75,12 +75,14 @@
   }
 
   /* Score and Hearts */
+  .timer,
+  .best-time,
   .best-score,
   .score,
   .heartsCount {
     position: absolute;
     top: 10px;
-    font-size: 1.2rem;
+    font-size: 1rem;
     padding: 5px 10px;
     background: rgba(0, 0, 0, 0.8);
     border-radius: 5px;

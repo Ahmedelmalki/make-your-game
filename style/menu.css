@@ -70,7 +70,7 @@
     color: #ff4e4e;
     padding: 5px 10px;
     border-radius: 5px;
-    font-size: 1.2rem;
+    font-size: 1rem;
     text-shadow: 2px 2px 5px rgba(255, 78, 78, 0.8);
 }
 
@@ -87,23 +87,31 @@
     position: absolute;
     top: 10px;
     left: 10px;
-    font-size: 1.5rem;
+    font-size: 1rem;
     color: #00ff6c;
     text-shadow: 2px 2px 6px rgba(0, 255, 108, 0.8);
     border: 2px solid #00ff6c;
 }
 
 .best-score {
-    left: 40%;
+    left: 20%;
     background: rgba(0, 0, 0, 0.8);
     padding: 8px 12px;
     border-radius: 6px;
     position: absolute;
     top: 10px;
-    font-size: 1.5rem;
+    font-size: 1rem;
     color: #c8ff00;
     text-shadow: 2px 2px 6px rgba(217, 255, 0, 0.8);
     border: 2px solid #eaff00;
+}
+
+.best-time{
+    left: 46%;
+}
+
+.timer{
+    left: 70%;
 }
 
 #game-over-container,
