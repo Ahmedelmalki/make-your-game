@@ -95,10 +95,6 @@ function restartGame() {
 
 function startGame() {
   if (gameRunning) return;
-
-
-  const container = document.getElementById('container');
-
   const menu = document.getElementById('menu')
   gameRunning = true;
   gamePaused = false;
@@ -107,7 +103,7 @@ function startGame() {
   elapsedTime = 0;
   requestAnimationFrame(timer);
 
-  moveShip(container);
+  moveShip();
   setupAliens(3, 5);
   spawnBullet();
   ship.style.display = 'block'
@@ -127,11 +123,6 @@ function togglePause() {
   console.log(gamePaused ? 'Game Paused' : 'Game Resumed');
 }
 
-
-
-function cleanEventListeners() {
-  document.removeEventListener("keydown", handleKeyDown);
-}
 function handleKeyDown(e) {
   if (e.key === "p") {
     togglePause();
@@ -159,6 +150,7 @@ function Clean() {
   const bullets = document.querySelectorAll('.bullet');
   aliens.forEach(alien => alien.remove());
   bullets.forEach(bullet => bullet.remove());
+  //cleanEventListeners()
 }
 
 function gameOver() {
@@ -202,13 +194,7 @@ function createAliens(rows, aliensPerRow) {
   for (let row = 1; row <= rows; row++) {
     for (let i = 0; i < aliensPerRow; i++) {
       const alien = document.createElement("img");
-      let alienImageSrc = null;
-      if (row <= 3) {
-        alienImageSrc = `./style/img/enemy${row}.png`;
-      } else {
-        alienImageSrc = './style/img/alien.png';
-      }
-      alien.src = alienImageSrc;
+      row <= 3 ? alien.src = `./style/img/enemy${row}.png` : alien.src = './style/img/alien.png';
       alien.alt = "Illustration of aliens";
       alien.classList.add("alien");
 
@@ -294,7 +280,9 @@ const keys = {
   " ": false
 };
 
-function moveShip(container) {
+function moveShip() {
+  const container = document.getElementById('container');
+
   let shipPosition = container.offsetWidth / 2 - ship.offsetWidth / 2;
 
   document.addEventListener("keydown", (e) => {
@@ -306,23 +294,24 @@ function moveShip(container) {
   });
 
   function updateShip() {
-    if (gamePaused || !gameRunning) return;
-
-    const containerWidth = container.offsetWidth;
-    if (keys.ArrowLeft && shipPosition > 0) {
-      shipPosition -= 15;
-    }
-    if (keys.ArrowRight && shipPosition < containerWidth - ship.offsetWidth) {
-      shipPosition += 15;
-    }
-    if (keys[" "]) {
-      const currentTime = Date.now();
-      if (currentTime - lastBulletTime >= BULLET_COOLDOWN) {
-        shootSound.play()
-        spawnBullet();
-        lastBulletTime = currentTime;
+    if (gameRunning && !gamePaused) {
+      const containerWidth = container.offsetWidth;
+      if (keys.ArrowLeft && shipPosition > 0) {
+        shipPosition -= 15;
+      }
+      if (keys.ArrowRight && shipPosition < containerWidth - ship.offsetWidth) {
+        shipPosition += 15;
+      }
+      if (keys[" "]) {
+        const currentTime = Date.now();
+        if (currentTime - lastBulletTime >= BULLET_COOLDOWN) {
+          shootSound.play()
+          spawnBullet();
+          lastBulletTime = currentTime;
+        }
       }
     }
+
 
     ship.style.left = `${shipPosition}px`;
     requestAnimationFrame(updateShip);

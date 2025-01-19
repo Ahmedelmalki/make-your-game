@@ -1,4 +1,3 @@
-  /* General Reset */
   body,
   html {
     margin: 0;
@@ -25,33 +24,6 @@
     width: 150px;
     transition: transform 0.1s ease-in-out;
   }
-
-  /* Game Over and Game Won Containers */
-  /* #game-over-container,
-  #game-won-container {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: rgba(0, 0, 0, 0.8);
-    border: 3px solid #ff4e4e;
-    padding: 20px;
-    border-radius: 8px;
-    text-align: center;
-    visibility: hidden;
-    color: #ff4e4e;
-    text-shadow: 2px 2px 8px rgba(255, 78, 78, 0.8);
-  }
-
-  #game-over-container h1,
-  #game-won-container h1 {
-    margin: 0;
-    font-size: 2.5rem;
-  } */
 
   /* Menu */
   .menu {
@@ -187,7 +159,7 @@
 
     .alien {
       left: 0;
-      top: 0;
+      /* top: 0; */
       width: 30px;
     }
 
