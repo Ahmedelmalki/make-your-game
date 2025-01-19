@@ -1,10 +1,13 @@
 # Make Your Game
 
 ## Description
-With the passing of time and the evolution of technology, boredom is harder to escape. To combat it, you’ve decided to create your own game using **JavaScript** and **plain HTML/DOM**, without any frameworks or canvas. The challenge? Achieving smooth, high-performance gameplay at 60 FPS!
 
-This single-player game project focuses on building a custom engine and tools from scratch, while keeping the game responsive and optimized.
+Over time, technology has grown a lot, but boredom is still a thing. To deal with it, I decided to make my own game using JavaScript and plain HTML/DOM—no frameworks or fancy stuff like canvas. The goal? Make it run super smooth at 60 FPS!
 
+This is a simple single-player game where I’m building everything from scratch, trying to keep it fast and responsive.
+
+
+![Game Screenshot](style/img/Screenshot.png)
 ---
 
 ## Objectives
