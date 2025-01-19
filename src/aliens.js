@@ -277,6 +277,7 @@ function moveShip(container) {
     ship.style.left = `${shipPosition}px`;
   });
 }
+
 /*********************************** bullet logic ************************************/
 function spawnBullet() {
   const container = document.getElementById('container');
@@ -350,4 +351,5 @@ function updateScore() {
   score.innerText = `score : ${varScore}`;
   hearts.innerText = `hearts : ${heartsCount}`
 }
+
 
