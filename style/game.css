@@ -12,8 +12,8 @@
   /* Container Styling */
   #container {
     position: relative;
-    width: 50%;
-    height: 90vh;
+    width: 80%;
+    height: 95vh;
     overflow: hidden;
   }
 
@@ -141,30 +141,236 @@
     display: none;
   }
 
+  
   /* Responsive Styling */
-  @media (max-width: 768px) {
-
-    .score,
-    .heartsCount {
-      font-size: 1rem;
-    }
-
-    .start {
-      font-size: 1.5rem;
-    }
-
-    #ship {
-      width: 50px;
-    }
-
-    .alien {
-      left: 0;
-      /* top: 0; */
-      width: 30px;
-    }
-
-    .bullet {
-      width: 8px;
-      height: 15px;
-    }
+ /* Responsive Styling */
+@media (max-width: 768px) {
+  .scoreboard {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 10px;
+    top: 5px;
+    padding: 5px;
   }
+
+  .score,
+  .heartsCount,
+  .timer,
+  .best-time,
+  .best-score {
+    font-size: 0.9rem;
+    flex: 1 1 auto;
+    text-align: center;
+    padding: 4px 8px;
+    margin: 0 5px;
+    box-sizing: border-box;
+  }
+
+  .start {
+    font-size: 1.5rem;
+  }
+
+  #ship {
+    width: 50px;
+  }
+
+  .alien {
+    width: 30px;
+  }
+
+  .bullet {
+    width: 8px;
+    height: 15px;
+  }
+}
+
+/* Responsive Styling for 612px and 312px */
+@media (max-width: 612px) {
+  #container {
+    width: 90%;
+    height: 85vh;
+  }
+
+  .scoreboard {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+    top: 5px;
+  }
+
+  .score,
+  .heartsCount,
+  .timer,
+  .best-time,
+  .best-score {
+    font-size: 0.8rem;
+    flex: 1 1 calc(50% - 10px);
+    text-align: center;
+    padding: 4px 6px;
+  }
+
+  .start {
+    font-size: 1.2rem;
+  }
+
+  #ship {
+    width: 40px;
+    bottom: 10px;
+  }
+
+  .alien {
+    width: 25px;
+  }
+
+  .bullet {
+    width: 6px;
+    height: 12px;
+  }
+}
+
+@media (max-width: 312px) {
+  #container {
+    width: 100%;
+    height: 80vh;
+  }
+
+  .scoreboard {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 5px;
+    top: 5px;
+  }
+
+  .score,
+  .heartsCount,
+  .timer,
+  .best-time,
+  .best-score {
+    font-size: 0.6rem;
+    flex: 1 1 100%;
+    text-align: center;
+    padding: 3px 6px;
+  }
+
+  .start {
+    font-size: 1rem;
+  }
+
+  #ship {
+    width: 30px;
+    bottom: 8px;
+  }
+
+  .alien {
+    width: 20px;
+  }
+
+  .bullet {
+    width: 5px;
+    height: 10px;
+  }
+}
+
+@media (max-width: 768px) {
+  #container {
+    width: 90%;
+    height: 90vh;
+  }
+
+  .scoreboard {
+    flex-wrap: wrap;
+    justify-content: space-between;
+    padding: 5px;
+    font-size: 0.9rem;
+  }
+
+  .scoreboard div {
+    flex: 1 1 auto;
+    margin: 0 5px;
+  }
+
+  #ship {
+    width: 100px;
+  }
+
+  .alien {
+    width: 40px;
+  }
+
+  .bullet {
+    width: 8px;
+    height: 15px;
+  }
+
+  .start {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  #container {
+    width: 100%;
+    height: 85vh;
+  }
+
+  .scoreboard {
+    gap: 8px;
+    font-size: 0.8rem;
+  }
+
+  .scoreboard div {
+    padding: 4px 6px;
+  }
+
+  #ship {
+    width: 70px;
+  }
+
+  .alien {
+    width: 30px;
+  }
+
+  .bullet {
+    width: 6px;
+    height: 12px;
+  }
+
+  .start {
+    font-size: 1.2rem;
+  }
+}
+
+@media (max-width: 312px) {
+  #container {
+    height: 80vh;
+  }
+
+  .scoreboard {
+    gap: 5px;
+    font-size: 0.6rem;
+  }
+
+  .scoreboard div {
+    padding: 3px 6px;
+  }
+
+  #ship {
+    width: 50px;
+  }
+
+  .alien {
+    width: 20px;
+  }
+
+  .bullet {
+    width: 5px;
+    height: 10px;
+  }
+
+  .start {
+    font-size: 1rem;
+  }
+}

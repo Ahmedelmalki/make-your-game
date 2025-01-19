@@ -124,9 +124,9 @@ function togglePause() {
 }
 
 function handleKeyDown(e) {
-  if (e.key === "p") {
+  if (e.key === "p" || e.key === "P") {
     togglePause();
-  } else if (e.key === "r") {
+  } else if (e.key === "r" || e.key === "R") {
     restartGame();
     startGame();
   }
