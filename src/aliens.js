@@ -56,7 +56,7 @@ function startGame() {
   
 
   moveShip(container);
-  setupAliens(1, 8, "./style/img/alien.png");
+  setupAliens(2, 22, "./style/img/alien.png");
   spawnBullet();
   ship.style.display = 'block';
   start_game.style.display = 'none';
@@ -120,15 +120,48 @@ function Clean() {
 }
 
 function gameOver() {
-  if (heartsCount === 0) {
-    Clean()
+  //if (heartsCount === 0) {
+   // Clean()
     gameRunning = false;
     gamePaused = false;
     gameEnded = true;
     game_over.style.display = 'block';
     ship.style.display = 'none';
-  }
+    Continue = true;
+  //}
 }
+
+function decrimentheartsCount() {
+  let aliens = document.querySelectorAll('.alien');
+  let positionships = ship.getBoundingClientRect();
+  
+  // Vérifie si la position du vaisseau est valide
+  if (!positionships) return;
+
+  aliens.forEach((e) => {
+    let positionaliens = e.getBoundingClientRect();
+    
+    if (positionaliens.bottom >= positionships.top && 
+        positionaliens.top <= positionships.bottom && 
+        positionaliens.right >= positionships.left && 
+        positionaliens.left <= positionships.right) {
+      
+     
+      gameOver();
+      
+      
+      
+      
+     
+    }
+  });
+
+}
+
+setInterval(decrimentheartsCount, 100); // Exécute la fonction toutes les 100 ms
+
+
+/**********************game won logic **************************************/
 
 function gameWon() {
   Continue = true;

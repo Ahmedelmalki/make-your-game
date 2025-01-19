@@ -32,20 +32,24 @@
     color: aliceblue;
 }
 
- #game-over-container #game-won-container{
-     display: flex;
-     flex-direction: column;
-     align-items: center;
-     justify-content: center;
-     height: 100vh;
-     /* Full screen height */
-     text-align: center;
+ #game-over-container {
+    position: fixed; /* Positionner le menu de manière fixe à l'écran */
+    top: 50%; /* Centrer le menu verticalement */
+    left: 50%; /* Centrer le menu horizontalement */
+    transform: translate(-50%, -50%); /* Ajuster pour centrer parfaitement */
+    background-color: rgba(212, 201, 201, 0.7); /* Fond semi-transparent */
+    color:rgb(226, 11, 11); /* Texte en blanc */
+    padding: 20px; /* Un peu de marge autour du texte */
+    border-radius: 10px; /* Coins arrondis */
+    text-align: center; /* Centrer le texte */
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Choisir une police simple */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* Ombre douce autour du menu */
  }
 
- .game-over {
-     font-size: 5rem;
+ #game-over-container span {
+     font-size: 2em;
      font-weight: bold;
-     color: red;
+     color: black;
  }
 
  .game-won {
