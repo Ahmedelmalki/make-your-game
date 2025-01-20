@@ -51,10 +51,10 @@ function startGame() {
   gameAudio.play();
 
   const container = document.getElementById('container');
+  
   gameRunning = true;
   gamePaused = false;
   
-
   moveShip(container);
   setupAliens(2, 22, "./style/img/alien.png");
   spawnBullet();
@@ -62,6 +62,10 @@ function startGame() {
   start_game.style.display = 'none';
   game_over.style.display = 'none';
   menu.style.display = 'none';
+ 
+
+
+
 }
 
 function togglePause() {
@@ -93,6 +97,10 @@ function handleKeyDown(e) {
   if (e.key === "p") togglePause(); //pause game
   if (e.key === "r" && Continue) {
     Continue = false;
+  const container = document.getElementById('container');
+  let shipPosition = container.offsetWidth / 2 - ship.offsetWidth / 2;
+  ship.style.left = `${shipPosition}px`;
+  console.log(shipPosition,"eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
     restartGame();
     startGame();
 
@@ -158,6 +166,13 @@ function decrimentheartsCount() {
 
 }
 
+window.onload = function() {
+  const startGameElement = document.getElementById('starting');
+
+  setInterval(() => {
+      startGameElement.classList.toggle('hidden');
+  }, 700);
+};
 setInterval(decrimentheartsCount, 100); // Exécute la fonction toutes les 100 ms
 
 
@@ -322,7 +337,6 @@ function animateBullet(bullet) {
 
       const currentTop = parseInt(bullet.style.top, 10);
       if (currentTop <= 0 || !bullet.parentNode) {
-        console.log(bullet);
 
         bullet.remove();
       } else {
@@ -353,3 +367,13 @@ function updateScore() {
 }
 
 
+function throttle(cb ,delai=1000) {
+  var lestim = 0 ;
+  return (...args)=>{
+   let now = Date.now()
+   if (now - lestim >= delai) { 
+   lestim = now;
+   cb(...args) ;
+  }
+  }
+}
