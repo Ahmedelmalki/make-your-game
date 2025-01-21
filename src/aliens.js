@@ -390,7 +390,7 @@ function moveShip(container) {
     if (keys.ArrowLeft && shipPosition > 0) {
       shipPosition -= 15;
     }
-    if (keys.ArrowRight && shipPosition < containerWidth - ship.offsetWidth) {
+    if (keys.ArrowRight && shipPosition < containerWidth - ship.offsetWidth+150) {
       shipPosition += 15;
     }
     if (keys[" "]) {
