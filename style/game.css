@@ -10,12 +10,8 @@ html {
 }
 
 /* Container Styling */
-#container {
-  position: relative;
-  width: 80%;
-  height: 95vh;
-  overflow: hidden;
-}
+
+
 
 /* Ship */
 #ship {
@@ -191,10 +187,7 @@ html {
 
 /* Responsive Styling for 612px and 312px */
 @media (max-width: 612px) {
-#container {
-  width: 90%;
-  height: 85vh;
-}
+
 
 .scoreboard {
   display: flex;
@@ -235,10 +228,7 @@ html {
 }
 
 @media (max-width: 312px) {
-#container {
-  width: 100%;
-  height: 80vh;
-}
+
 
 .scoreboard {
   display: flex;
@@ -279,10 +269,7 @@ html {
 }
 
 @media (max-width: 768px) {
-#container {
-  width: 90%;
-  height: 90vh;
-}
+
 
 .scoreboard {
   flex-wrap: wrap;
@@ -315,10 +302,7 @@ html {
 }
 
 @media (max-width: 480px) {
-#container {
-  width: 100%;
-  height: 85vh;
-}
+
 
 .scoreboard {
   gap: 8px;
@@ -348,9 +332,6 @@ html {
 }
 
 @media (max-width: 312px) {
-#container {
-  height: 80vh;
-}
 
 .scoreboard {
   gap: 5px;

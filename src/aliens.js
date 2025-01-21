@@ -137,21 +137,16 @@ function cleanEventListeners() {
   document.removeEventListener("keydown", handleKeyDown);
 }
 function handleKeyDown(e) {
-  
-  if (e.key === "s" || e.key === "S")  {
-    if (!game_won.style.display || game_won.style.display === 'none') {
-      startGame();
-    }
-  }
-  if (e.key === "p" || e.key === "P") {
-    togglePause();
-  }
-  if (e.key === "r" || e.key === "R") {
-    if (gameWon || Continue) {
-      Continue = false; // Reset Continue if needed
-      restartGame();
-      startGame();
-    }
+  if (
+    (!game_won.style.display || game_won.style.display === 'none') && 
+    (!game_over.style.display || game_over.style.display === 'none')
+  ) {
+    startGame();
+  }  if (e.key === "p" || e.key === "P") togglePause();
+  if (e.key === "r" || e.key === "R"&& Continue) {
+    Continue = false;
+    restartGame();
+    startGame();
   }
 }
 
@@ -213,13 +208,11 @@ function createAliens(rows, aliensPerRow) {
   const alienWidth = 32;
   const alienHeight = 32;
   const aliens = [];
-  const containerHeight = container.offsetHeight; // Get container height
 
   for (let row = 0; row < rows; row++) {
     for (let i = 0; i < aliensPerRow; i++) {
       const alien = document.createElement("img");
       let alienImageSrc = null;
-
       if (row === 0) {
         alienImageSrc = './style/img/enemy1.png';
       } else if (row === 1) {
@@ -229,17 +222,12 @@ function createAliens(rows, aliensPerRow) {
       } else {
         alienImageSrc = './style/img/enemy3.png';
       }
-
       alien.src = alienImageSrc;
       alien.alt = "Illustration of aliens";
       alien.classList.add("alien");
 
       alien.style.left = i * (alienWidth + 10) + "px";
       alien.style.top = row * (alienHeight + 10) + "px";
-
-      // Calculate max bottom for aliens
-      const maxBottom = containerHeight - alienHeight - 15; // 15px above the bottom
-      alien.setAttribute('data-max-bottom', maxBottom);
 
       container.appendChild(alien);
       aliens.push(alien);
@@ -248,7 +236,6 @@ function createAliens(rows, aliensPerRow) {
 
   return aliens;
 }
-
 
 function animateAliens(aliens, aliensPerRow) {
   const alienWidth = 32;
@@ -263,48 +250,46 @@ function animateAliens(aliens, aliensPerRow) {
   let direction = 1;
   let topOffset = 0;
 
-  // Cancel any existing animation before starting a new one
-  if (alienAnimationId) {
-    cancelAnimationFrame(alienAnimationId);
-    alienAnimationId = null;
-  }
-
   function animate() {
     if (!gamePaused && gameRunning && !gameEnded) {
       position += speed * direction;
 
-      // Handle edge collision and move aliens downward
       const rightmost = position + aliensPerRow * (alienWidth + 10) - 10;
       if (rightmost >= containerWidth || position <= 0) {
         direction *= -1;
         topOffset += verticalStep;
       }
+      for (let i = 0; i < aliens.length; i++) {
+        const row = Math.floor(i / aliensPerRow);
+        const rowTop = topOffset + row * verticalStep;
 
-      // Check if aliens reach the bottom
-      if (topOffset + alienHeight >= containerHeight) {
-        heartsCount--;
-        updateScore();
-        if (heartsCount > 0) {
-          // Reset aliens' positions
-          topOffset = 0;
-          position = 0;
-        } else {
-          // End the game if no hearts are left
-          gameOver();
-          return;
+        if (rowTop + alienHeight > containerHeight) {
+          if (heartsCount > 1) {
+            heartsCount--;
+            updateScore();
+            updateBestScore();
+            topOffset = 0;
+            position = 0;
+            break;
+          } else if (heartsCount === 1) {
+            cancelAnimationFrame(alienAnimationId);
+            alienAnimationId = null;
+            gameOver();
+            return;
+          }
         }
       }
 
-      // Update aliens' positions
-      aliens.forEach((alien, i) => {
+      for (let i = 0; i < aliens.length; i++) {
         const row = Math.floor(i / aliensPerRow);
         const column = i % aliensPerRow;
         const left = position + column * (alienWidth + 10);
         const top = topOffset + row * verticalStep;
 
-        alien.style.left = `${left}px`;
-        alien.style.top = `${top}px`;
-      });
+        aliens[i].style.left = `${left}px`;
+        aliens[i].style.top = `${top}px`;
+        //aliens[i].style.transform = `translate(${left}px, ${top}px)`;
+      }
     }
 
     alienAnimationId = requestAnimationFrame(animate);
@@ -312,8 +297,6 @@ function animateAliens(aliens, aliensPerRow) {
 
   animate();
 }
-
-
 
 /********************************* ship logic ****************************************/
 
@@ -390,20 +373,19 @@ function animateBullet(bullet) {
       aliens.forEach((alien) => {
         const alienRect = alien.getBoundingClientRect();
         if (isColliding(bulletRect, alienRect)) {
-          console.log("Alien removed!"); // Debug log
           alien.remove();
           bullet.remove();
           varScore += 10;
-          updateScore();
-          updateBestScore();
+          updateScore()
+          updateBestScore()
           cancelAnimationFrame(bulletAnimationId);
           bulletAnimationIds.delete(bulletAnimationId);
           return;
         }
       });
 
-      if (document.querySelectorAll(".alien").length === 0) {
-        console.log("All aliens destroyed! Game won."); // Debug log
+      const remainingAliens = document.querySelectorAll(".alien");
+      if (remainingAliens.length === 0) {
         gameWon();
         cancelAnimationFrame(bulletAnimationId);
         bulletAnimationIds.delete(bulletAnimationId);
@@ -412,6 +394,8 @@ function animateBullet(bullet) {
 
       const currentTop = parseInt(bullet.style.top, 10);
       if (currentTop <= 0 || !bullet.parentNode) {
+        // console.log(bullet);
+
         bullet.remove();
       } else {
         bullet.style.top = `${currentTop - 5}px`;
@@ -424,7 +408,6 @@ function animateBullet(bullet) {
   bulletAnimationId = requestAnimationFrame(move);
   bulletAnimationIds.add(bulletAnimationId);
 }
-
 
 function isColliding(rect1, rect2) {
   return !(
