@@ -137,9 +137,7 @@ function cleanEventListeners() {
   document.removeEventListener("keydown", handleKeyDown);
 }
 function handleKeyDown(e) {
-  if ((e.key === "s" || e.key === "S") && gameWon) {
-    startGame();
-  }
+  
   if (e.key === "s" || e.key === "S")  {
     startGame();
   }
@@ -213,11 +211,13 @@ function createAliens(rows, aliensPerRow) {
   const alienWidth = 32;
   const alienHeight = 32;
   const aliens = [];
+  const containerHeight = container.offsetHeight; // Get container height
 
   for (let row = 0; row < rows; row++) {
     for (let i = 0; i < aliensPerRow; i++) {
       const alien = document.createElement("img");
       let alienImageSrc = null;
+
       if (row === 0) {
         alienImageSrc = './style/img/enemy1.png';
       } else if (row === 1) {
@@ -227,12 +227,17 @@ function createAliens(rows, aliensPerRow) {
       } else {
         alienImageSrc = './style/img/enemy3.png';
       }
+
       alien.src = alienImageSrc;
       alien.alt = "Illustration of aliens";
       alien.classList.add("alien");
 
       alien.style.left = i * (alienWidth + 10) + "px";
       alien.style.top = row * (alienHeight + 10) + "px";
+
+      // Calculate max bottom for aliens
+      const maxBottom = containerHeight - alienHeight - 15; // 15px above the bottom
+      alien.setAttribute('data-max-bottom', maxBottom);
 
       container.appendChild(alien);
       aliens.push(alien);
@@ -241,7 +246,6 @@ function createAliens(rows, aliensPerRow) {
 
   return aliens;
 }
-
 
 
 function animateAliens(aliens, aliensPerRow) {
