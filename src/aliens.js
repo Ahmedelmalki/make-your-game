@@ -137,7 +137,8 @@ function cleanEventListeners() {
   document.removeEventListener("keydown", handleKeyDown);
 }
 function handleKeyDown(e) {
-  if (
+
+  if ((e.key === "s" || e.key === "S") &&
     (!game_won.style.display || game_won.style.display === 'none') && 
     (!game_over.style.display || game_over.style.display === 'none')
   ) {
