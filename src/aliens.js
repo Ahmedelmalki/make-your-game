@@ -9,10 +9,11 @@ const score = document.getElementById('score')
 const hearts = document.getElementById('heartsCount')
 
 var varScore = 0;
-let heartsCount = 3
+let heartsCount = 3;
 let gameRunning = false;
 let gamePaused = false;
 let gameEnded = false;
+let Continue = false;
 const start = document.getElementById('start')
 
 let alienAnimationId = null;
@@ -32,7 +33,7 @@ bestScoreDisplay.textContent = `Best Score: ${bestScore}`;
 function updateBestScore() {
   if (varScore > bestScore) {
     bestScore = varScore;
-    localStorage.setItem('bestScore', bestScore); // Store in localStorage
+    localStorage.setItem('bestScore', bestScore);
     bestScoreDisplay.textContent = `Best Score: ${bestScore}`;
   }
 }
@@ -47,8 +48,8 @@ let startTime = 0;
 let elapsedTime = 0;
 let timerInterval = null;
 
-function updateBestTime() {  
-  const currentTime = Math.floor(elapsedTime / 1000); // Convert to seconds
+function updateBestTime() {
+  const currentTime = Math.floor(elapsedTime / 1000);
   if (currentTime < bestTime) {
     bestTime = currentTime;
     localStorage.setItem('bestTime', bestTime);
@@ -119,6 +120,7 @@ function startGame() {
 }
 
 function togglePause() {
+  Continue = true;
   if (!gameRunning) return;
   gamePaused = !gamePaused;
   if (gamePaused) {
@@ -137,7 +139,8 @@ function cleanEventListeners() {
 function handleKeyDown(e) {
   if (e.key === "s") startGame();
   if (e.key === "p") togglePause();
-  if (e.key === "r") {
+  if (e.key === "r" && Continue) {
+    Continue = false;
     restartGame();
     startGame();
   }
@@ -164,6 +167,7 @@ function Clean() {
 }
 
 function gameOver() {
+  Continue = true;
   updateBestScore()
   updateBestTime()
   gameRunning = false;
@@ -251,7 +255,6 @@ function animateAliens(aliens, aliensPerRow) {
         direction *= -1;
         topOffset += verticalStep;
       }
-      // checking if any row has reached the bottom
       for (let i = 0; i < aliens.length; i++) {
         const row = Math.floor(i / aliensPerRow);
         const rowTop = topOffset + row * verticalStep;
@@ -268,7 +271,6 @@ function animateAliens(aliens, aliensPerRow) {
             cancelAnimationFrame(alienAnimationId);
             alienAnimationId = null;
             gameOver();
-
             return;
           }
         }
