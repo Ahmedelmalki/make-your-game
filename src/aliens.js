@@ -139,7 +139,9 @@ function cleanEventListeners() {
 function handleKeyDown(e) {
   
   if (e.key === "s" || e.key === "S")  {
-    startGame();
+    if (!game_won.style.display || game_won.style.display === 'none') {
+      startGame();
+    }
   }
   if (e.key === "p" || e.key === "P") {
     togglePause();
