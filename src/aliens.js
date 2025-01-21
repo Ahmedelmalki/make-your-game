@@ -137,9 +137,9 @@ function cleanEventListeners() {
   document.removeEventListener("keydown", handleKeyDown);
 }
 function handleKeyDown(e) {
-  if (e.key === "s") startGame();
-  if (e.key === "p") togglePause();
-  if (e.key === "r" && Continue) {
+  if (e.key === "s" || e.key === "S") startGame();
+  if (e.key === "p" || e.key === "P") togglePause();
+  if (e.key === "r" || e.key === "R"&& Continue) {
     Continue = false;
     restartGame();
     startGame();
