@@ -225,7 +225,7 @@ function createAliens(rows, aliensPerRow) {
       } else if (row === 2) {
         alienImageSrc = './style/img/enemy3.png';
       } else {
-        alienImageSrc = './style/img/alien.png';
+        alienImageSrc = './style/img/enemy3.png';
       }
       alien.src = alienImageSrc;
       alien.alt = "Illustration of aliens";
@@ -242,6 +242,8 @@ function createAliens(rows, aliensPerRow) {
   return aliens;
 }
 
+
+
 function animateAliens(aliens, aliensPerRow) {
   const alienWidth = 32;
   const alienHeight = 32;
@@ -255,46 +257,48 @@ function animateAliens(aliens, aliensPerRow) {
   let direction = 1;
   let topOffset = 0;
 
+  // Cancel any existing animation before starting a new one
+  if (alienAnimationId) {
+    cancelAnimationFrame(alienAnimationId);
+    alienAnimationId = null;
+  }
+
   function animate() {
     if (!gamePaused && gameRunning && !gameEnded) {
       position += speed * direction;
 
+      // Handle edge collision and move aliens downward
       const rightmost = position + aliensPerRow * (alienWidth + 10) - 10;
       if (rightmost >= containerWidth || position <= 0) {
         direction *= -1;
         topOffset += verticalStep;
       }
-      for (let i = 0; i < aliens.length; i++) {
-        const row = Math.floor(i / aliensPerRow);
-        const rowTop = topOffset + row * verticalStep;
 
-        if (rowTop + alienHeight > containerHeight) {
-          if (heartsCount > 1) {
-            heartsCount--;
-            updateScore();
-            updateBestScore();
-            topOffset = 0;
-            position = 0;
-            break;
-          } else if (heartsCount === 1) {
-            cancelAnimationFrame(alienAnimationId);
-            alienAnimationId = null;
-            gameOver();
-            return;
-          }
+      // Check if aliens reach the bottom
+      if (topOffset + alienHeight >= containerHeight) {
+        heartsCount--;
+        updateScore();
+        if (heartsCount > 0) {
+          // Reset aliens' positions
+          topOffset = 0;
+          position = 0;
+        } else {
+          // End the game if no hearts are left
+          gameOver();
+          return;
         }
       }
 
-      for (let i = 0; i < aliens.length; i++) {
+      // Update aliens' positions
+      aliens.forEach((alien, i) => {
         const row = Math.floor(i / aliensPerRow);
         const column = i % aliensPerRow;
         const left = position + column * (alienWidth + 10);
         const top = topOffset + row * verticalStep;
 
-        aliens[i].style.left = `${left}px`;
-        aliens[i].style.top = `${top}px`;
-        //aliens[i].style.transform = `translate(${left}px, ${top}px)`;
-      }
+        alien.style.left = `${left}px`;
+        alien.style.top = `${top}px`;
+      });
     }
 
     alienAnimationId = requestAnimationFrame(animate);
@@ -302,6 +306,8 @@ function animateAliens(aliens, aliensPerRow) {
 
   animate();
 }
+
+
 
 /********************************* ship logic ****************************************/
 

@@ -69,6 +69,7 @@ html {
   right: 10px;
 }
 
+
  
 
 /* Start Message */
@@ -90,11 +91,13 @@ html {
   }
 }
 
+
 /* Aliens */
 .alien {
   transform: translateY(20px);
   position: absolute;
   width: 60px;
+  bottom: 15px;
   transition: transform 0.1s ease-in-out;
   animation: glow 1.5s infinite alternate;
 }
