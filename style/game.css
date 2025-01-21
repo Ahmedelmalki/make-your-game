@@ -1,5 +1,7 @@
   /* General Reset */
-  body,
+  body{
+    background-image: url("./img/space.png"); 
+  }
   html {
     margin: 0;
     padding: 0;

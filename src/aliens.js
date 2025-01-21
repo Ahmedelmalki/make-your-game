@@ -2,23 +2,19 @@
 const ship = document.getElementById('ship')
 const game_over = document.getElementById('game-over-container')
 const game_won = document.getElementById('game-won-container')
-const score = document.getElementById('score')
-const hearts = document.getElementById('heartsCount')
-const start = document.getElementById('start')
-const shootSound = document.getElementById('shoot')
-const bestScoreDisplay = document.getElementById('best-score')
-const bestTimeDisplay = document.getElementById('best-time')
-const displayTime = document.getElementById('timer')
-
 ship.style.display = 'none'
 game_over.style.display = 'none'
 game_won.style.display = 'none';
+const score = document.getElementById('score')
+const hearts = document.getElementById('heartsCount')
 
 var varScore = 0;
-let heartsCount = 3
+let heartsCount = 3;
 let gameRunning = false;
 let gamePaused = false;
 let gameEnded = false;
+let Continue = false;
+const start = document.getElementById('start')
 
 let alienAnimationId = null;
 let bulletAnimationIds = new Set();
@@ -26,27 +22,34 @@ let bulletAnimationIds = new Set();
 let lastBulletTime = 0;
 const BULLET_COOLDOWN = 100;
 
+const shootSound = document.getElementById('shoot')
+
+const bestScoreDisplay = document.getElementById('best-score')
 let bestScore = parseInt(localStorage.getItem('bestScore')) || 0;
 bestScoreDisplay.textContent = `Best Score: ${bestScore}`;
-let bestTime = parseInt(localStorage.getItem('bestTime')) || Infinity;
-bestTimeDisplay.textContent = `Best Time: ${bestTime}`
 
 
 /**************best score logic*************/
 function updateBestScore() {
   if (varScore > bestScore) {
     bestScore = varScore;
-    localStorage.setItem('bestScore', bestScore); // Store in localStorage
+    localStorage.setItem('bestScore', bestScore);
     bestScoreDisplay.textContent = `Best Score: ${bestScore}`;
   }
 }
 /*****************best time logic***************/
+const bestTimeDisplay = document.getElementById('best-time')
+const displayTime = document.getElementById('timer')
+
+let bestTime = parseInt(localStorage.getItem('bestTime')) || Infinity;
+bestTimeDisplay.textContent = `Best Time: ${bestTime}`
+
 let startTime = 0;
 let elapsedTime = 0;
 let timerInterval = null;
 
 function updateBestTime() {
-  const currentTime = Math.floor(elapsedTime / 1000); // Convert to seconds
+  const currentTime = Math.floor(elapsedTime / 1000);
   if (currentTime < bestTime) {
     bestTime = currentTime;
     localStorage.setItem('bestTime', bestTime);
@@ -71,6 +74,8 @@ function timer() {
 
 /************************************ pause menu logic ***********************************/
 function restartGame() {
+  Continue = false;
+
   bestScoreDisplay.textContent = `Best Score: ${bestScore}`;
   bestTimeDisplay.textContent = `Best Time: ${formatTime(bestTime)}`;
 
@@ -108,7 +113,7 @@ function startGame() {
   requestAnimationFrame(timer);
 
   moveShip(container);
-  setupAliens(3, 5);
+  setupAliens(6, 5);
   spawnBullet();
   ship.style.display = 'block'
   start.style.display = 'none';
@@ -117,11 +122,14 @@ function startGame() {
 }
 
 function togglePause() {
+  Continue = !Continue; 
   if (!gameRunning) return;
   gamePaused = !gamePaused;
   if (gamePaused) {
+    Continue = true; 
     menu.style.display = 'block';
   } else {
+    Continue = false;
     menu.style.display = 'none';
   }
   console.log(gamePaused ? 'Game Paused' : 'Game Resumed');
@@ -133,9 +141,10 @@ function cleanEventListeners() {
   document.removeEventListener("keydown", handleKeyDown);
 }
 function handleKeyDown(e) {
-  if (e.key === "p") {
-    togglePause();
-  } else if (e.key === "r") {
+  if (e.key === "s") startGame();
+  if (e.key === "p") togglePause();
+  if (e.key === "r" && Continue) {
+    Continue = false;
     restartGame();
     startGame();
   }
@@ -162,6 +171,7 @@ function Clean() {
 }
 
 function gameOver() {
+  Continue = true;
   updateBestScore()
   updateBestTime()
   gameRunning = false;
@@ -174,6 +184,7 @@ function gameOver() {
 }
 
 function gameWon() {
+  Continue = true;
   if (document.querySelectorAll('.alien').length === 0) {
     updateBestScore()
     updateBestTime()
@@ -185,6 +196,71 @@ function gameWon() {
     Clean()
   }
 }
+
+
+
+let canDecrement = true; // Variable pour contrôler l'exécution
+
+function checkCollisions() {
+  let aliens = document.querySelectorAll('.alien');
+  let positionShips = ship.getBoundingClientRect();
+
+  // Vérifie si la position du vaisseau est valide
+  if (!positionShips) return;
+
+  aliens.forEach((alien) => {
+    let positionAliens = alien.getBoundingClientRect();
+
+    if (
+      positionAliens.bottom >= positionShips.top &&
+      positionAliens.top <= positionShips.bottom &&
+      positionAliens.right >= positionShips.left &&
+      positionAliens.left <= positionShips.right
+    ) {
+      // Appelle decrementHeartsCount uniquement si on peut encore le faire
+      if (canDecrement) {
+        decrementHeartsCount();
+        canDecrement = false; // Empêche d'exécuter de nouveau immédiatement
+
+        // Réactive après 1 seconde
+        setTimeout(() => {
+          canDecrement = true;
+        }, 1000);
+      }
+    }
+  });
+}
+
+function decrementHeartsCount() {
+  console.log("UYUUUUUUUUUUUUUUUghhhhhhhhhhU");
+
+  if (heartsCount > 1) {
+    heartsCount--;
+    console.log(heartsCount, "yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy");
+
+    updateScore();
+    updateBestScore();
+    const aliens = document.querySelectorAll('.alien');
+    aliens.forEach(alien => alien.remove());
+    setupAliens(6, 5);
+   
+    console.log("waddddddddddddddddddddddddddddddddddddddddaz");
+    
+
+  } else if (heartsCount === 1) {
+    console.log(heartsCount, "ppppppppppppppppppppppppppppppppppppppppp");
+    console.log("warah sf khserti");
+    cancelAnimationFrame(alienAnimationId);
+    alienAnimationId = null;
+     gameOver();
+  }
+}
+
+// Appeler checkCollisions à intervalles réguliers
+setInterval(checkCollisions, 100); // Vérifie les collisions toutes les 100 ms
+
+
+
 
 /******************************** Aliens logic *************************************/
 function setupAliens(rows, aliensPerRow) {
@@ -199,12 +275,16 @@ function createAliens(rows, aliensPerRow) {
   const alienHeight = 32;
   const aliens = [];
 
-  for (let row = 1; row <= rows; row++) {
+  for (let row = 0; row < rows; row++) {
     for (let i = 0; i < aliensPerRow; i++) {
       const alien = document.createElement("img");
       let alienImageSrc = null;
-      if (row <= 3) {
-        alienImageSrc = `./style/img/enemy${row}.png`;
+      if (row === 0) {
+        alienImageSrc = './style/img/enemy1.png';
+      } else if (row === 1) {
+        alienImageSrc = './style/img/enemy2.png';
+      } else if (row === 2) {
+        alienImageSrc = './style/img/enemy3.png';
       } else {
         alienImageSrc = './style/img/alien.png';
       }
@@ -229,16 +309,7 @@ function animateAliens(aliens, aliensPerRow) {
   const containerWidth = container.offsetWidth;
   const containerHeight = container.offsetHeight;
 
-  const alienContainer = document.createElement('div');
-  alienContainer.style.position = 'absolute';
-  alienContainer.style.width = `${aliensPerRow * (alienWidth + 10)}px`;
-  alienContainer.style.height = `${Math.ceil(aliens.length / aliensPerRow) * (alienHeight + 20)}px`;
-  container.appendChild(alienContainer);
-
-  // Move all aliens into the container
-  aliens.forEach(alien => alienContainer.appendChild(alien));
-
-  const speed = 5;
+  const speed = 13;
   const verticalStep = alienHeight + 20;
 
   let position = 0;
@@ -249,37 +320,44 @@ function animateAliens(aliens, aliensPerRow) {
     if (!gamePaused && gameRunning && !gameEnded) {
       position += speed * direction;
 
-      const containerRect = alienContainer.getBoundingClientRect();
-      const rightEdge = position + containerRect.width;
-      const bottomEdge = containerRect.bottom;
-      const shipTop = container.offsetHeight - 100; // Ship area
-
-      // Handle horizontal movement
-      if (rightEdge >= containerWidth || position <= 0) {
+      const rightmost = position + aliensPerRow * (alienWidth + 10) - 10;
+      if (rightmost >= containerWidth || position <= 0) {
         direction *= -1;
         topOffset += verticalStep;
       }
+      // for (let i = 0; i < aliens.length; i++) {
+      //   const row = Math.floor(i / aliensPerRow);
+      //   const rowTop = topOffset + row * verticalStep;
 
-      // Check if aliens reached the ship area
-      if (bottomEdge > shipTop) {
-        if (heartsCount > 0) {
-          heartsCount--;
-          updateScore();
-          // Reset position
-          topOffset = 0;
-          position = 0;
-        }
-        if (heartsCount === 0) {
-          cancelAnimationFrame(alienAnimationId);
-          gameOver();
-          return;
-        }
+      //   if (rowTop + alienHeight > containerHeight) {
+      //     if (heartsCount > 1) {
+      //       heartsCount--;
+      //       updateScore();
+      //       updateBestScore();
+      //       topOffset = 0;
+      //       position = 0;
+      //       break;
+      //     } else if (heartsCount === 1) {
+      //       cancelAnimationFrame(alienAnimationId);
+      //       alienAnimationId = null;
+      //       gameOver();
+      //       return;
+      //     }
+      //   }
+      // }
+
+      for (let i = 0; i < aliens.length; i++) {
+        const row = Math.floor(i / aliensPerRow);
+        const column = i % aliensPerRow;
+        const left = position + column * (alienWidth + 10);
+        const top = topOffset + row * verticalStep;
+
+        aliens[i].style.left = `${left}px`;
+        aliens[i].style.top = `${top}px`;
+        //aliens[i].style.transform = `translate(${left}px, ${top}px)`;
       }
-
-      // Update container position
-      alienContainer.style.left = `${position}px`;
-      alienContainer.style.top = `${topOffset}px`;
     }
+
     alienAnimationId = requestAnimationFrame(animate);
   }
 
@@ -410,5 +488,5 @@ function isColliding(rect1, rect2) {
 
 function updateScore() {
   score.innerText = `score : ${varScore}`;
-  hearts.innerText = `hearts : ${heartsCount}`
-}
+  hearts.innerText = `hearts : ${heartsCount}`;
+};
