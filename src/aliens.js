@@ -137,12 +137,21 @@ function cleanEventListeners() {
   document.removeEventListener("keydown", handleKeyDown);
 }
 function handleKeyDown(e) {
-  if (e.key === "s" || e.key === "S") startGame();
-  if (e.key === "p" || e.key === "P") togglePause();
-  if (e.key === "r" || e.key === "R"&& Continue) {
-    Continue = false;
-    restartGame();
+  if ((e.key === "s" || e.key === "S") && gameWon) {
     startGame();
+  }
+  if (e.key === "s" || e.key === "S")  {
+    startGame();
+  }
+  if (e.key === "p" || e.key === "P") {
+    togglePause();
+  }
+  if (e.key === "r" || e.key === "R") {
+    if (gameWon || Continue) {
+      Continue = false; // Reset Continue if needed
+      restartGame();
+      startGame();
+    }
   }
 }
 
@@ -369,19 +378,20 @@ function animateBullet(bullet) {
       aliens.forEach((alien) => {
         const alienRect = alien.getBoundingClientRect();
         if (isColliding(bulletRect, alienRect)) {
+          console.log("Alien removed!"); // Debug log
           alien.remove();
           bullet.remove();
           varScore += 10;
-          updateScore()
-          updateBestScore()
+          updateScore();
+          updateBestScore();
           cancelAnimationFrame(bulletAnimationId);
           bulletAnimationIds.delete(bulletAnimationId);
           return;
         }
       });
 
-      const remainingAliens = document.querySelectorAll(".alien");
-      if (remainingAliens.length === 0) {
+      if (document.querySelectorAll(".alien").length === 0) {
+        console.log("All aliens destroyed! Game won."); // Debug log
         gameWon();
         cancelAnimationFrame(bulletAnimationId);
         bulletAnimationIds.delete(bulletAnimationId);
@@ -390,8 +400,6 @@ function animateBullet(bullet) {
 
       const currentTop = parseInt(bullet.style.top, 10);
       if (currentTop <= 0 || !bullet.parentNode) {
-        // console.log(bullet);
-
         bullet.remove();
       } else {
         bullet.style.top = `${currentTop - 5}px`;
@@ -404,6 +412,7 @@ function animateBullet(bullet) {
   bulletAnimationId = requestAnimationFrame(move);
   bulletAnimationIds.add(bulletAnimationId);
 }
+
 
 function isColliding(rect1, rect2) {
   return !(
