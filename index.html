@@ -10,10 +10,7 @@
 
 <body>
   <audio id="shoot" src="./style/audio/audio.mp3"></audio>
-  <audio id="background-audio" loop>
-    <source src="./audio/background-music.mp3" type="audio/mpeg">
-    Your browser does not support the audio element.
-  </audio>
+  <audio id="background-audio" src="./style/audio/audio2.mp3" preload="auto"></audio>
   
   <div id="container" >
     <img src="./style/img/george-wassouf.png" alt="Illustration of the ship" id="ship" class="ship">
@@ -27,6 +24,8 @@
       <h1 class="game-over">Game Over</h1>
       <span class="R">Press R to Play Again</span>
   <audio id="game-over-sound" src="./style/audio/gameover.wav"></audio>
+  <audio id="game-won-sound" src="./style/audio/gamewon.wav"></audio>
+
 
     </div>
     <div id="game-won-container">

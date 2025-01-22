@@ -27,25 +27,34 @@ const shootSound = document.getElementById('shoot')
 const bestScoreDisplay = document.getElementById('best-score')
 let bestScore = parseInt(localStorage.getItem('bestScore')) || 0;
 bestScoreDisplay.textContent = `Best Score: ${bestScore}`;
-/************** Audio Handling **************/
 
 /************** Audio Handling **************/
 const backgroundAudio = document.getElementById('background-audio');
 
-// Play background audio when the game starts
+const austartTime = 170;
+const endTime = 185; 
+
+backgroundAudio.currentTime = austartTime;
+
 function playBackgroundAudio() {
-  backgroundAudio.volume = 0.5; // Adjust volume (optional)
+  backgroundAudio.volume = 1; 
   backgroundAudio.play().catch((err) => {
     console.warn("Audio playback failed:", err);
   });
+
+  // Ensure the audio loops between the start and end times
+  backgroundAudio.addEventListener('timeupdate', () => {
+    if (backgroundAudio.currentTime >= endTime) {
+      backgroundAudio.currentTime = austartTime; // Reset to start time
+      backgroundAudio.play();
+    }
+  });
 }
 
-// Pause background audio
 function pauseBackgroundAudio() {
   backgroundAudio.pause();
 }
 
-// Handle visibility changes
 document.addEventListener('visibilitychange', () => {
   if (document.hidden) {
     pauseBackgroundAudio(); // Pause when the user tabs away
@@ -56,7 +65,6 @@ document.addEventListener('visibilitychange', () => {
   }
 });
 
-// Ensure audio starts when the game begins
 startGame = function () {
   if (gameRunning) return;
 
@@ -79,6 +87,7 @@ startGame = function () {
   game_over.style.display = 'none';
   menu.style.display = 'none';
 };
+
 
 
 /**************best score logic*************/
@@ -234,22 +243,28 @@ function updateHearts() {
 }
 
 function gameOver() {
-    Continue = true;
-    updateBestScore();
-    updateBestTime();
-    gameRunning = false;
-    gamePaused = false;
-    gameEnded = true;
-    game_over.style.display = 'block';
-    ship.style.display = 'none';
-    hearts.innerText = `hearts : 0`;
+  Continue = true;
+  updateBestScore();
+  updateBestTime();
+  gameRunning = false;
+  gamePaused = false;
+  gameEnded = true;
+  game_over.style.display = 'block';
+  ship.style.display = 'none';
+  hearts.innerText = `hearts : 0`;
 
-    // Play the game-over sound
-    gameOverSound.currentTime = 0; // Restart the sound
-    gameOverSound.play();
+  // Pause the background music
+  pauseBackgroundAudio();
 
-    Clean(); // Clear the game state
+  // Play the game-over sound
+  const gameOverSound = document.getElementById('game-over-sound');
+  gameOverSound.currentTime = 0; // Restart the sound
+  gameOverSound.play();
+
+  Clean(); // Clear the game state
 }
+
+
 
 // Example of damage logic (reduce hearts when hit)
 function playerHit() {
@@ -262,16 +277,24 @@ function playerHit() {
 
 function gameWon() {
   if (document.querySelectorAll('.alien').length === 0) {
-    updateBestScore()
-    updateBestTime()
-    gameRunning = false;
-    gamePaused = false;
-    gameEnded = true;
-    game_won.style.display = 'flex';
-    ship.style.display = 'none';
-    Clean()
+      updateBestScore();
+      updateBestTime();
+      gameRunning = false;
+      gamePaused = false;
+      gameEnded = true;
+      game_won.style.display = 'flex';
+      ship.style.display = 'none';
+
+      // Pause the background music
+      pauseBackgroundAudio();
+
+      const gameOverSound = document.getElementById('game-won-sound');
+      gameOverSound.currentTime = 0; // Restart the sound
+      gameOverSound.play();
+      Clean();
   }
 }
+
 
 /******************************** Aliens logic *************************************/
 function setupAliens(rows, aliensPerRow) {
