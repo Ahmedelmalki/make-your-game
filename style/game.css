@@ -13,7 +13,7 @@ html {
 /* Ship */
 #ship {
   position: absolute;
-  bottom: 15px;
+  bottom: -50px;
   width: 150px;
   transition: transform 0.1s ease-in-out;
 }
