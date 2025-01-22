@@ -1,7 +1,7 @@
   /* General Reset */
-  body{
-    background-image: url("./img/space.png"); 
-  }
+  /*body{
+    background: radial-gradient(circle, #0f0f0f 30%, #000000 100%);
+  }*/
   html {
     margin: 0;
     padding: 0;
@@ -10,6 +10,7 @@
     font-family: 'Roboto Mono', monospace;
     overflow: hidden;
     color: white;
+    background-image: url('./img/space.png');
   }
 
   /* Container Styling */

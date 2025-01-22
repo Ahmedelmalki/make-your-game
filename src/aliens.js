@@ -2,6 +2,7 @@
 const ship = document.getElementById('ship')
 const game_over = document.getElementById('game-over-container')
 const game_won = document.getElementById('game-won-container')
+const fire = document.getElementById("fire");
 ship.style.display = 'none'
 game_over.style.display = 'none'
 game_won.style.display = 'none';
@@ -10,6 +11,7 @@ const hearts = document.getElementById('heartsCount')
 
 var varScore = 0;
 let heartsCount = 3;
+var Fire = 100;
 let gameRunning = false;
 let gamePaused = false;
 let gameEnded = false;
@@ -37,6 +39,7 @@ function updateBestScore() {
     bestScoreDisplay.textContent = `Best Score: ${bestScore}`;
   }
 }
+
 /*****************best time logic***************/
 const bestTimeDisplay = document.getElementById('best-time')
 const displayTime = document.getElementById('timer')
@@ -86,8 +89,10 @@ function restartGame() {
   game_won.style.display = 'none';
 
 
-  varScore = 0
-  heartsCount = 3
+  varScore = 0;
+  heartsCount = 3;
+  Fire = 100;
+  UPdateFire();
 
   score.textContent = varScore;
   hearts.textContent = heartsCount;
@@ -141,9 +146,9 @@ function cleanEventListeners() {
   document.removeEventListener("keydown", handleKeyDown);
 }
 function handleKeyDown(e) {
-  if (e.key === "s") startGame();
-  if (e.key === "p") togglePause();
-  if (e.key === "r" && Continue) {
+  if (e.key.toLowerCase() === "s") startGame();
+  if (e.key.toLowerCase() === "p") togglePause();
+  if (e.key.toLowerCase() === "r" && Continue) {
     Continue = false;
     restartGame();
     startGame();
@@ -309,7 +314,7 @@ function animateAliens(aliens, aliensPerRow) {
   const containerWidth = container.offsetWidth;
   const containerHeight = container.offsetHeight;
 
-  const speed = 13;
+  const speed = 10;
   const verticalStep = alienHeight + 20;
 
   let position = 0;
@@ -325,26 +330,7 @@ function animateAliens(aliens, aliensPerRow) {
         direction *= -1;
         topOffset += verticalStep;
       }
-      // for (let i = 0; i < aliens.length; i++) {
-      //   const row = Math.floor(i / aliensPerRow);
-      //   const rowTop = topOffset + row * verticalStep;
-
-      //   if (rowTop + alienHeight > containerHeight) {
-      //     if (heartsCount > 1) {
-      //       heartsCount--;
-      //       updateScore();
-      //       updateBestScore();
-      //       topOffset = 0;
-      //       position = 0;
-      //       break;
-      //     } else if (heartsCount === 1) {
-      //       cancelAnimationFrame(alienAnimationId);
-      //       alienAnimationId = null;
-      //       gameOver();
-      //       return;
-      //     }
-      //   }
-      // }
+     
 
       for (let i = 0; i < aliens.length; i++) {
         const row = Math.floor(i / aliensPerRow);
@@ -354,7 +340,6 @@ function animateAliens(aliens, aliensPerRow) {
 
         aliens[i].style.left = `${left}px`;
         aliens[i].style.top = `${top}px`;
-        //aliens[i].style.transform = `translate(${left}px, ${top}px)`;
       }
     }
 
@@ -395,9 +380,13 @@ function moveShip(container) {
     }
     if (keys[" "]) {
       const currentTime = Date.now();
-      if (currentTime - lastBulletTime >= BULLET_COOLDOWN) {
-        shootSound.play()
+      if ((currentTime - lastBulletTime >= BULLET_COOLDOWN * 2.5 ) && Fire>0) {
+       // shootSound.play()
         spawnBullet();
+        Fire--
+        UPdateFire();
+        console.log(Fire);
+
         lastBulletTime = currentTime;
       }
     }
@@ -490,3 +479,6 @@ function updateScore() {
   score.innerText = `score : ${varScore}`;
   hearts.innerText = `hearts : ${heartsCount}`;
 };
+function UPdateFire() {
+  fire.innerHTML =`Fire : ${ Fire}`;
+}
