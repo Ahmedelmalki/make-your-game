@@ -1,17 +1,14 @@
+@import url(https://db.onlinewebfonts.com/c/496f5330d2c390d6487c296d2c550426?family=Pixellari);
 body,
 html {
   margin: 0;
   padding: 0;
   height: 100%;
   background: radial-gradient(circle, #0f0f0f 30%, #000000 100%);
-  font-family: 'Roboto Mono', monospace;
-  overflow: hidden;
+  font-family: "Pixellari";
+    overflow: hidden;
   color: white;
 }
-
-/* Container Styling */
-
-
 
 /* Ship */
 #ship {

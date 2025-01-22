@@ -27,6 +27,58 @@ const shootSound = document.getElementById('shoot')
 const bestScoreDisplay = document.getElementById('best-score')
 let bestScore = parseInt(localStorage.getItem('bestScore')) || 0;
 bestScoreDisplay.textContent = `Best Score: ${bestScore}`;
+/************** Audio Handling **************/
+
+/************** Audio Handling **************/
+const backgroundAudio = document.getElementById('background-audio');
+
+// Play background audio when the game starts
+function playBackgroundAudio() {
+  backgroundAudio.volume = 0.5; // Adjust volume (optional)
+  backgroundAudio.play().catch((err) => {
+    console.warn("Audio playback failed:", err);
+  });
+}
+
+// Pause background audio
+function pauseBackgroundAudio() {
+  backgroundAudio.pause();
+}
+
+// Handle visibility changes
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) {
+    pauseBackgroundAudio(); // Pause when the user tabs away
+  } else {
+    if (gameRunning && !gamePaused && !gameEnded) {
+      playBackgroundAudio(); // Resume when the user comes back
+    }
+  }
+});
+
+// Ensure audio starts when the game begins
+startGame = function () {
+  if (gameRunning) return;
+
+  playBackgroundAudio(); // Start background music
+  const container = document.getElementById('container');
+
+  const menu = document.getElementById('menu');
+  gameRunning = true;
+  gamePaused = false;
+
+  startTime = Date.now();
+  elapsedTime = 0;
+  requestAnimationFrame(timer);
+
+  moveShip(container);
+  setupAliens(6, 5);
+  spawnBullet();
+  ship.style.display = 'block';
+  start.style.display = 'none';
+  game_over.style.display = 'none';
+  menu.style.display = 'none';
+};
 
 
 /**************best score logic*************/
@@ -171,18 +223,42 @@ function Clean() {
   bullets.forEach(bullet => bullet.remove());
 }
 
-function gameOver() {
-  Continue = true;
-  updateBestScore()
-  updateBestTime()
-  gameRunning = false;
-  gamePaused = false;
-  gameEnded = true;
-  game_over.style.display = 'block';
-  ship.style.display = 'none';
-  hearts.innerText = `hearts : 0`
-  Clean()
+function updateHearts() {
+    if (playerHearts <= 0) {
+        // If hearts are zero, trigger game-over logic
+        gameOver();
+    } else {
+        // Update the displayed number of hearts
+        hearts.innerText = `hearts: ${playerHearts}`;
+    }
 }
+
+function gameOver() {
+    Continue = true;
+    updateBestScore();
+    updateBestTime();
+    gameRunning = false;
+    gamePaused = false;
+    gameEnded = true;
+    game_over.style.display = 'block';
+    ship.style.display = 'none';
+    hearts.innerText = `hearts : 0`;
+
+    // Play the game-over sound
+    gameOverSound.currentTime = 0; // Restart the sound
+    gameOverSound.play();
+
+    Clean(); // Clear the game state
+}
+
+// Example of damage logic (reduce hearts when hit)
+function playerHit() {
+    if (playerHearts > 0) {
+        playerHearts--; // Reduce hearts
+        updateHearts(); // Check if game over
+    }
+}
+
 
 function gameWon() {
   if (document.querySelectorAll('.alien').length === 0) {
@@ -307,6 +383,7 @@ const keys = {
   " ": false
 };
 
+
 function moveShip(container) {
   let shipPosition = container.offsetWidth / 2 - ship.offsetWidth / 2;
 
@@ -331,7 +408,15 @@ function moveShip(container) {
     if (keys[" "]) {
       const currentTime = Date.now();
       if (currentTime - lastBulletTime >= BULLET_COOLDOWN) {
-        shootSound.play()
+        // Play only the first second of the shoot sound
+        shootSound.currentTime = 0; // Reset the audio to the beginning
+        shootSound.play();         // Play the audio
+
+        // Stop the audio after 1 second
+        setTimeout(() => {
+          shootSound.pause();
+        }, 1000);
+
         spawnBullet();
         lastBulletTime = currentTime;
       }
@@ -343,6 +428,7 @@ function moveShip(container) {
 
   requestAnimationFrame(updateShip);
 }
+
 /*********************************** bullet logic ************************************/
 function spawnBullet() {
   const container = document.getElementById('container');
