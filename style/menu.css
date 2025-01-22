@@ -130,6 +130,8 @@
     font-weight: bold;
     color: #ff4e4e;
     text-shadow: 2px 2px 10px rgba(255, 78, 78, 1);
+    animation: blink 0.5s infinite;
+
 }
 
 .game-won {
