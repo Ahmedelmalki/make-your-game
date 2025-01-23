@@ -22,13 +22,63 @@ let alienAnimationId = null;
 let bulletAnimationIds = new Set();
 
 let lastBulletTime = 0;
-const BULLET_COOLDOWN = 100;
 
 const shootSound = document.getElementById('shoot')
 
 const bestScoreDisplay = document.getElementById('best-score')
 let bestScore = parseInt(localStorage.getItem('bestScore')) || 0;
 bestScoreDisplay.textContent = `Best Score: ${bestScore}`;
+
+/*****************************different-maps logic********************************/
+const LEVELS = {
+  level1: {
+    bulletCoolDown: 150,
+    rows: 2,
+    aliensPerRow: 5,
+    alienSpeed: 5,
+    backgroundImg: "url('./style/img/space1.jpg')",
+  },
+  level2: {
+    bulletCoolDown: 200,
+    rows: 3,
+    aliensPerRow: 6,
+    alienSpeed: 7,
+    backgroundImg: "url('./style/img/space1.jpg')",
+  },
+  level3: {
+    bulletCoolDown: 250,
+    rows: 4,
+    aliensPerRow: 7,
+    alienSpeed: 9,
+    backgroundImg: "url('./style/img/space1.jpg')",
+  }
+};
+
+const level = document.getElementById('level')
+
+let currentLevel = 'level1';
+let currentConfig = LEVELS[currentLevel];
+
+function nextLevel() {
+  if (currentLevel === 'level1') {
+    level.innerText = `level : ${2}`
+    currentLevel = 'level2';
+  } else if (currentLevel === 'level2') {
+    level.innerText = `level : ${3}`
+    currentLevel = 'level3';
+  } else {
+    gameWon();
+    return;
+  }
+  currentConfig = LEVELS[currentLevel];
+  updateBackgroundImg(currentConfig)
+  Clean();
+  setupAliens(currentConfig);
+}
+
+function updateBackgroundImg(config){
+  document.documentElement.style.backgroundImage = config.backgroundImg;
+}
 
 
 /**************best score logic*************/
@@ -106,19 +156,21 @@ function restartGame() {
 function startGame() {
   if (gameRunning) return;
 
-
   const container = document.getElementById('container');
-
   const menu = document.getElementById('menu')
   gameRunning = true;
   gamePaused = false;
+
+  currentLevel = 'level1';
+  currentConfig = LEVELS[currentLevel];
+  updateBackgroundImg(currentConfig)
 
   startTime = Date.now();
   elapsedTime = 0;
   requestAnimationFrame(timer);
 
   moveShip(container);
-  setupAliens(6, 5);
+  setupAliens(currentConfig);
   spawnBullet();
   ship.style.display = 'block'
   start.style.display = 'none';
@@ -127,11 +179,11 @@ function startGame() {
 }
 
 function togglePause() {
-  Continue = !Continue; 
+  Continue = !Continue;
   if (!gameRunning) return;
   gamePaused = !gamePaused;
   if (gamePaused) {
-    Continue = true; 
+    Continue = true;
     menu.style.display = 'block';
   } else {
     Continue = false;
@@ -140,11 +192,6 @@ function togglePause() {
   console.log(gamePaused ? 'Game Paused' : 'Game Resumed');
 }
 
-
-
-function cleanEventListeners() {
-  document.removeEventListener("keydown", handleKeyDown);
-}
 function handleKeyDown(e) {
   if (e.key.toLowerCase() === "s") startGame();
   if (e.key.toLowerCase() === "p") togglePause();
@@ -190,7 +237,7 @@ function gameOver() {
 
 function gameWon() {
   Continue = true;
-  if (document.querySelectorAll('.alien').length === 0) {
+  if (currentLevel === 'level3') {
     updateBestScore()
     updateBestTime()
     gameRunning = false;
@@ -199,10 +246,10 @@ function gameWon() {
     game_won.style.display = 'flex';
     ship.style.display = 'none';
     Clean()
+  } else {
+    nextLevel()
   }
 }
-
-
 
 let canDecrement = true; // Variable pour contrôler l'exécution
 
@@ -237,27 +284,18 @@ function checkCollisions() {
 }
 
 function decrementHeartsCount() {
-  console.log("UYUUUUUUUUUUUUUUUghhhhhhhhhhU");
-
   if (heartsCount > 1) {
     heartsCount--;
-    console.log(heartsCount, "yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy");
-
     updateScore();
     updateBestScore();
     const aliens = document.querySelectorAll('.alien');
     aliens.forEach(alien => alien.remove());
-    setupAliens(6, 5);
-   
-    console.log("waddddddddddddddddddddddddddddddddddddddddaz");
-    
-
+    setupAliens(currentConfig);
   } else if (heartsCount === 1) {
-    console.log(heartsCount, "ppppppppppppppppppppppppppppppppppppppppp");
     console.log("warah sf khserti");
     cancelAnimationFrame(alienAnimationId);
     alienAnimationId = null;
-     gameOver();
+    gameOver();
   }
 }
 
@@ -268,10 +306,9 @@ setInterval(checkCollisions, 100); // Vérifie les collisions toutes les 100 ms
 
 
 /******************************** Aliens logic *************************************/
-function setupAliens(rows, aliensPerRow) {
-
-  const aliens = createAliens(rows, aliensPerRow);
-  animateAliens(aliens, aliensPerRow);
+function setupAliens(config) {
+  const aliens = createAliens(config.rows, config.aliensPerRow);
+  animateAliens(aliens, config.aliensPerRow, config.alienSpeed);
 }
 
 function createAliens(rows, aliensPerRow) {
@@ -283,17 +320,7 @@ function createAliens(rows, aliensPerRow) {
   for (let row = 0; row < rows; row++) {
     for (let i = 0; i < aliensPerRow; i++) {
       const alien = document.createElement("img");
-      let alienImageSrc = null;
-      if (row === 0) {
-        alienImageSrc = './style/img/enemy1.png';
-      } else if (row === 1) {
-        alienImageSrc = './style/img/enemy2.png';
-      } else if (row === 2) {
-        alienImageSrc = './style/img/enemy3.png';
-      } else {
-        alienImageSrc = './style/img/enemy3.png';
-      }
-      alien.src = alienImageSrc;
+      alien.src = `./style/img/enemy${Math.floor(Math.random() *4)+1}.png`;
       alien.alt = "Illustration of aliens";
       alien.classList.add("alien");
 
@@ -308,13 +335,12 @@ function createAliens(rows, aliensPerRow) {
   return aliens;
 }
 
-function animateAliens(aliens, aliensPerRow) {
+function animateAliens(aliens, aliensPerRow, speed) {
+  const container = document.getElementById('container')
   const alienWidth = 32;
   const alienHeight = 32;
   const containerWidth = container.offsetWidth;
   const containerHeight = container.offsetHeight;
-
-  const speed = 10;
   const verticalStep = alienHeight + 20;
 
   let position = 0;
@@ -330,7 +356,7 @@ function animateAliens(aliens, aliensPerRow) {
         direction *= -1;
         topOffset += verticalStep;
       }
-     
+
 
       for (let i = 0; i < aliens.length; i++) {
         const row = Math.floor(i / aliensPerRow);
@@ -375,18 +401,16 @@ function moveShip(container) {
     if (keys.ArrowLeft && shipPosition > 0) {
       shipPosition -= 15;
     }
-    if (keys.ArrowRight && shipPosition < containerWidth - ship.offsetWidth+150) {
+    if (keys.ArrowRight && shipPosition < containerWidth - ship.offsetWidth + 150) {
       shipPosition += 15;
     }
     if (keys[" "]) {
       const currentTime = Date.now();
-      if ((currentTime - lastBulletTime >= BULLET_COOLDOWN * 2.5 ) && Fire>0) {
-       // shootSound.play()
+      if ((currentTime - lastBulletTime >= currentConfig.bulletCoolDown ) && Fire > 0) {
+        // shootSound.play()
         spawnBullet();
         Fire--
         UPdateFire();
-        console.log(Fire);
-
         lastBulletTime = currentTime;
       }
     }
@@ -480,5 +504,5 @@ function updateScore() {
   hearts.innerText = `hearts : ${heartsCount}`;
 };
 function UPdateFire() {
-  fire.innerHTML =`Fire : ${ Fire}`;
+  fire.innerHTML = `Fire : ${Fire}`;
 }
