@@ -145,3 +145,7 @@
     color: #999999;
     text-shadow: 1px 1px 4px rgba(153, 153, 153, 0.8);
 }
+
+#level{
+    width: 70%;
+}

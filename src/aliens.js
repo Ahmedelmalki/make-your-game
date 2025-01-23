@@ -24,13 +24,61 @@ let alienAnimationId = null;
 let bulletAnimationIds = new Set();
 
 let lastBulletTime = 0;
-const BULLET_COOLDOWN = 100;
+//onst BULLET_COOLDOWN = 100;
 
 let bestScore = parseInt(localStorage.getItem('bestScore')) || 0;
 bestScoreDisplay.textContent = `Best Score: ${bestScore}`;
 let bestTime = parseInt(localStorage.getItem('bestTime')) || Infinity;
 bestTimeDisplay.textContent = `Best Time: ${bestTime}`
 
+/*****************************different-maps logic********************************/
+const LEVELS = {
+  level1: {
+    bulletCoolDown: 150,
+    rows: 2,
+    aliensPerRow: 5,
+    alienSpeed: 5,
+    backgroundColor: '#000033',
+    // speedMultiplier: 1
+  },
+  level2: {
+    bulletCoolDown: 200,
+    rows: 3,
+    aliensPerRow: 6,
+    alienSpeed: 7,
+    backgroundColor: '#000066',
+    // speedMultiplier: 1.2
+  },
+  level3: {
+    bulletCoolDown: 250,
+    rows: 4,
+    aliensPerRow: 7,
+    alienSpeed: 9,
+    backgroundColor: '#003366',
+    // speedMultiplier: 1.5
+  }
+};
+
+const level = document.getElementById('level')
+
+let currentLevel = 'level1';
+let currentConfig = LEVELS[currentLevel];
+
+function nextLevel() {
+  if (currentLevel === 'level1') {
+    level.innerText = `level : ${2}`
+    currentLevel = 'level2';
+  } else if (currentLevel === 'level2') {
+    level.innerText = `level : ${3}`
+    currentLevel = 'level3';
+  } else {
+    gameWon();
+    return;
+  }
+  currentConfig = LEVELS[currentLevel];
+  Clean();
+  setupAliens(currentConfig);
+}
 
 /**************best score logic*************/
 function updateBestScore() {
@@ -99,12 +147,16 @@ function startGame() {
   gameRunning = true;
   gamePaused = false;
 
+
+  currentLevel = 'level1';
+  currentConfig = LEVELS[currentLevel];
+
   startTime = Date.now();
   elapsedTime = 0;
   requestAnimationFrame(timer);
 
   moveShip();
-  setupAliens(3, 5);
+  setupAliens(currentConfig);
   spawnBullet();
   ship.style.display = 'block'
   start.style.display = 'none';
@@ -166,7 +218,8 @@ function gameOver() {
 }
 
 function gameWon() {
-  if (document.querySelectorAll('.alien').length === 0) {
+  // if (document.querySelectorAll('.alien').length === 0) {
+  if (currentLevel === 'level3') {
     updateBestScore()
     updateBestTime()
     gameRunning = false;
@@ -175,14 +228,18 @@ function gameWon() {
     game_won.style.display = 'flex';
     ship.style.display = 'none';
     Clean()
+  } else {
+    nextLevel()
   }
+  //}
 }
 
 /******************************** Aliens logic *************************************/
-function setupAliens(rows, aliensPerRow) {
+function setupAliens(config) {
 
-  const aliens = createAliens(rows, aliensPerRow);
-  animateAliens(aliens, aliensPerRow);
+  const aliens = createAliens(config.rows, config.aliensPerRow);
+  animateAliens(aliens, config.aliensPerRow, config.alienSpeed);
+  document.getElementById('container').style.background = config.backgroundColor
 }
 
 function createAliens(rows, aliensPerRow) {
@@ -209,7 +266,7 @@ function createAliens(rows, aliensPerRow) {
   return aliens;
 }
 
-function animateAliens(aliens, aliensPerRow) {
+function animateAliens(aliens, aliensPerRow, speed) {
   const alienWidth = 32;
   const alienHeight = 32;
   const containerWidth = container.offsetWidth;
@@ -224,7 +281,7 @@ function animateAliens(aliens, aliensPerRow) {
   // Move all aliens into the container
   aliens.forEach(alien => alienContainer.appendChild(alien));
 
-  const speed = 5;
+  //const speed = 5;
   const verticalStep = alienHeight + 20;
 
   let position = 0;
@@ -304,7 +361,7 @@ function moveShip() {
       }
       if (keys[" "]) {
         const currentTime = Date.now();
-        if (currentTime - lastBulletTime >= BULLET_COOLDOWN) {
+        if (currentTime - lastBulletTime >= currentConfig.bulletCoolDown) {
           shootSound.play()
           spawnBullet();
           lastBulletTime = currentTime;
