@@ -104,7 +104,7 @@ function restartGame() {
 }
 
 function startGame() {
-  if (gameRunning) return;
+  if (gameRunning || gameEnded) return;
 
 
   const container = document.getElementById('container');
@@ -137,7 +137,6 @@ function togglePause() {
     Continue = false;
     menu.style.display = 'none';
   }
-  console.log(gamePaused ? 'Game Paused' : 'Game Resumed');
 }
 
 
@@ -237,11 +236,9 @@ function checkCollisions() {
 }
 
 function decrementHeartsCount() {
-  console.log("UYUUUUUUUUUUUUUUUghhhhhhhhhhU");
 
   if (heartsCount > 1) {
     heartsCount--;
-    console.log(heartsCount, "yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy");
 
     updateScore();
     updateBestScore();
@@ -249,12 +246,9 @@ function decrementHeartsCount() {
     aliens.forEach(alien => alien.remove());
     setupAliens(6, 5);
    
-    console.log("waddddddddddddddddddddddddddddddddddddddddaz");
     
 
   } else if (heartsCount === 1) {
-    console.log(heartsCount, "ppppppppppppppppppppppppppppppppppppppppp");
-    console.log("warah sf khserti");
     cancelAnimationFrame(alienAnimationId);
     alienAnimationId = null;
      gameOver();
@@ -385,7 +379,6 @@ function moveShip(container) {
         spawnBullet();
         Fire--
         UPdateFire();
-        console.log(Fire);
 
         lastBulletTime = currentTime;
       }
@@ -449,7 +442,6 @@ function animateBullet(bullet) {
 
       const currentTop = parseInt(bullet.style.top, 10);
       if (currentTop <= 0 || !bullet.parentNode) {
-        // console.log(bullet);
 
         bullet.remove();
       } else {
