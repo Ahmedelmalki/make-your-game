@@ -1,8 +1,9 @@
-html,
 body {
   height: 100%;
   margin: 0;
   position: relative;
+  background: radial-gradient(circle, #0f0f0f 30%, #000000 100%);
+
 }
 
 #container {
@@ -11,9 +12,9 @@ body {
   position: absolute;
   width: 100vw;
   height: 100vh;
-  background-color: black;
   overflow: hidden;
   transform: translate(-50%, -50%);
+  background-image: url("img/space.png");
 }
 
 .alien {

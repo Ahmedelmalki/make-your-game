@@ -2,6 +2,7 @@
 const ship = document.getElementById('ship')
 const game_over = document.getElementById('game-over-container')
 const game_won = document.getElementById('game-won-container')
+const fire = document.getElementById("fire");
 ship.style.display = 'none'
 game_over.style.display = 'none'
 game_won.style.display = 'none';
@@ -10,6 +11,7 @@ const hearts = document.getElementById('heartsCount')
 
 var varScore = 0;
 let heartsCount = 3;
+var Fire = 100;
 let gameRunning = false;
 let gamePaused = false;
 let gameEnded = false;
@@ -37,6 +39,7 @@ function updateBestScore() {
     bestScoreDisplay.textContent = `Best Score: ${bestScore}`;
   }
 }
+
 /*****************best time logic***************/
 const bestTimeDisplay = document.getElementById('best-time')
 const displayTime = document.getElementById('timer')
@@ -74,6 +77,8 @@ function timer() {
 
 /************************************ pause menu logic ***********************************/
 function restartGame() {
+  Continue = false;
+
   bestScoreDisplay.textContent = `Best Score: ${bestScore}`;
   bestTimeDisplay.textContent = `Best Time: ${formatTime(bestTime)}`;
 
@@ -84,8 +89,10 @@ function restartGame() {
   game_won.style.display = 'none';
 
 
-  varScore = 0
-  heartsCount = 3
+  varScore = 0;
+  heartsCount = 3;
+  Fire = 100;
+  UPdateFire();
 
   score.textContent = varScore;
   hearts.textContent = heartsCount;
@@ -120,12 +127,14 @@ function startGame() {
 }
 
 function togglePause() {
-  Continue = true;
+  Continue = !Continue; 
   if (!gameRunning) return;
   gamePaused = !gamePaused;
   if (gamePaused) {
+    Continue = true; 
     menu.style.display = 'block';
   } else {
+    Continue = false;
     menu.style.display = 'none';
   }
   console.log(gamePaused ? 'Game Paused' : 'Game Resumed');
@@ -137,14 +146,9 @@ function cleanEventListeners() {
   document.removeEventListener("keydown", handleKeyDown);
 }
 function handleKeyDown(e) {
-
-  if ((e.key === "s" || e.key === "S") &&
-    (!game_won.style.display || game_won.style.display === 'none') && 
-    (!game_over.style.display || game_over.style.display === 'none')
-  ) {
-    startGame();
-  }  if (e.key === "p" || e.key === "P") togglePause();
-  if (e.key === "r" || e.key === "R"&& Continue) {
+  if (e.key.toLowerCase() === "s") startGame();
+  if (e.key.toLowerCase() === "p") togglePause();
+  if (e.key.toLowerCase() === "r" && Continue) {
     Continue = false;
     restartGame();
     startGame();
@@ -185,6 +189,7 @@ function gameOver() {
 }
 
 function gameWon() {
+  Continue = true;
   if (document.querySelectorAll('.alien').length === 0) {
     updateBestScore()
     updateBestTime()
@@ -196,6 +201,71 @@ function gameWon() {
     Clean()
   }
 }
+
+
+
+let canDecrement = true; // Variable pour contrôler l'exécution
+
+function checkCollisions() {
+  let aliens = document.querySelectorAll('.alien');
+  let positionShips = ship.getBoundingClientRect();
+
+  // Vérifie si la position du vaisseau est valide
+  if (!positionShips) return;
+
+  aliens.forEach((alien) => {
+    let positionAliens = alien.getBoundingClientRect();
+
+    if (
+      positionAliens.bottom >= positionShips.top &&
+      positionAliens.top <= positionShips.bottom &&
+      positionAliens.right >= positionShips.left &&
+      positionAliens.left <= positionShips.right
+    ) {
+      // Appelle decrementHeartsCount uniquement si on peut encore le faire
+      if (canDecrement) {
+        decrementHeartsCount();
+        canDecrement = false; // Empêche d'exécuter de nouveau immédiatement
+
+        // Réactive après 1 seconde
+        setTimeout(() => {
+          canDecrement = true;
+        }, 1000);
+      }
+    }
+  });
+}
+
+function decrementHeartsCount() {
+  console.log("UYUUUUUUUUUUUUUUUghhhhhhhhhhU");
+
+  if (heartsCount > 1) {
+    heartsCount--;
+    console.log(heartsCount, "yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy");
+
+    updateScore();
+    updateBestScore();
+    const aliens = document.querySelectorAll('.alien');
+    aliens.forEach(alien => alien.remove());
+    setupAliens(6, 5);
+   
+    console.log("waddddddddddddddddddddddddddddddddddddddddaz");
+    
+
+  } else if (heartsCount === 1) {
+    console.log(heartsCount, "ppppppppppppppppppppppppppppppppppppppppp");
+    console.log("warah sf khserti");
+    cancelAnimationFrame(alienAnimationId);
+    alienAnimationId = null;
+     gameOver();
+  }
+}
+
+// Appeler checkCollisions à intervalles réguliers
+setInterval(checkCollisions, 100); // Vérifie les collisions toutes les 100 ms
+
+
+
 
 /******************************** Aliens logic *************************************/
 function setupAliens(rows, aliensPerRow) {
@@ -260,26 +330,7 @@ function animateAliens(aliens, aliensPerRow) {
         direction *= -1;
         topOffset += verticalStep;
       }
-      for (let i = 0; i < aliens.length; i++) {
-        const row = Math.floor(i / aliensPerRow);
-        const rowTop = topOffset + row * verticalStep;
-
-        if (rowTop + alienHeight > containerHeight) {
-          if (heartsCount > 1) {
-            heartsCount--;
-            updateScore();
-            updateBestScore();
-            topOffset = 0;
-            position = 0;
-            break;
-          } else if (heartsCount === 1) {
-            cancelAnimationFrame(alienAnimationId);
-            alienAnimationId = null;
-            gameOver();
-            return;
-          }
-        }
-      }
+     
 
       for (let i = 0; i < aliens.length; i++) {
         const row = Math.floor(i / aliensPerRow);
@@ -289,7 +340,6 @@ function animateAliens(aliens, aliensPerRow) {
 
         aliens[i].style.left = `${left}px`;
         aliens[i].style.top = `${top}px`;
-        //aliens[i].style.transform = `translate(${left}px, ${top}px)`;
       }
     }
 
@@ -325,14 +375,18 @@ function moveShip(container) {
     if (keys.ArrowLeft && shipPosition > 0) {
       shipPosition -= 15;
     }
-    if (keys.ArrowRight && shipPosition < containerWidth - ship.offsetWidth) {
+    if (keys.ArrowRight && shipPosition < containerWidth - ship.offsetWidth+150) {
       shipPosition += 15;
     }
     if (keys[" "]) {
       const currentTime = Date.now();
-      if (currentTime - lastBulletTime >= BULLET_COOLDOWN) {
-        shootSound.play()
+      if ((currentTime - lastBulletTime >= BULLET_COOLDOWN * 2.5 ) && Fire>0) {
+       // shootSound.play()
         spawnBullet();
+        Fire--
+        UPdateFire();
+        console.log(Fire);
+
         lastBulletTime = currentTime;
       }
     }
@@ -423,5 +477,8 @@ function isColliding(rect1, rect2) {
 
 function updateScore() {
   score.innerText = `score : ${varScore}`;
-  hearts.innerText = `hearts : ${heartsCount}`
+  hearts.innerText = `hearts : ${heartsCount}`;
+};
+function UPdateFire() {
+  fire.innerHTML =`Fire : ${ Fire}`;
 }

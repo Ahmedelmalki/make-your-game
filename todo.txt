@@ -1,22 +1,3 @@
-best time, with a timer 
-
-
-first thing to do today is to move ship and fire at the same time
-- pause menu
-- restart functionality
-
-
-Does the game display the pause menu, with the options: continue and restart?
-+Does the project run quickly and effectively? (Favoring recursive, no unnecessary data requests, etc)
-
-
-- lives system
-- score board implementation
-
-
-- timer/countdown
-
-NOTE : one by one 
-switch score from dom to html
-
-change all queryselecter with get element by id
+Game runs at at least 60 FPS at all times
+No frame drops!
+Proper use of RequestAnimationFrame
