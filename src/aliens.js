@@ -31,8 +31,8 @@ bestScoreDisplay.textContent = `Best Score: ${bestScore}`;
 /************** Audio Handling **************/
 const backgroundAudio = document.getElementById('background-audio');
 
-const austartTime = 170;
-const endTime = 185; 
+const austartTime = 5;
+const endTime = 20; 
 
 backgroundAudio.currentTime = austartTime;
 
