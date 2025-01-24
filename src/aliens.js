@@ -31,6 +31,66 @@ let bestScore = parseInt(localStorage.getItem('bestScore')) || 0;
 bestScoreDisplay.textContent = `Best Score: ${bestScore}`;
 
 
+/************** Audio Handling **************/
+const backgroundAudio = document.getElementById('background-audio');
+
+const austartTime = 5;
+const endTime = 20; 
+
+backgroundAudio.currentTime = austartTime;
+
+function playBackgroundAudio() {
+  backgroundAudio.volume = 0.2; 
+  backgroundAudio.play().catch((err) => {
+    console.warn("Audio playback failed:", err);
+  });
+
+  // Ensure the audio loops between the start and end times
+  backgroundAudio.addEventListener('timeupdate', () => {
+    if (backgroundAudio.currentTime >= endTime) {
+      backgroundAudio.currentTime = austartTime; // Reset to start time
+      backgroundAudio.play();
+    }
+  });
+}
+
+function pauseBackgroundAudio() {
+  backgroundAudio.pause();
+}
+
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) {
+    pauseBackgroundAudio(); // Pause when the user tabs away
+  } else {
+    if (gameRunning && !gamePaused && !gameEnded) {
+      playBackgroundAudio(); // Resume when the user comes back
+    }
+  }
+});
+
+startGame = function () {
+  if (gameRunning) return;
+
+  playBackgroundAudio(); // Start background music
+  const container = document.getElementById('container');
+
+  const menu = document.getElementById('menu');
+  gameRunning = true;
+  gamePaused = false;
+
+  startTime = Date.now();
+  elapsedTime = 0;
+  requestAnimationFrame(timer);
+
+  moveShip(container);
+  setupAliens(6, 5);
+  spawnBullet();
+  ship.style.display = 'block';
+  start.style.display = 'none';
+  game_over.style.display = 'none';
+  menu.style.display = 'none';
+};
+
 /**************best score logic*************/
 function updateBestScore() {
   if (varScore > bestScore) {
@@ -145,13 +205,30 @@ function togglePause() {
 function cleanEventListeners() {
   document.removeEventListener("keydown", handleKeyDown);
 }
+let isMuted = false;
 function handleKeyDown(e) {
-  if (e.key.toLowerCase() === "s") startGame();
-  if (e.key.toLowerCase() === "p") togglePause();
-  if (e.key.toLowerCase() === "r" && Continue) {
-    Continue = false;
-    restartGame();
-    startGame();
+  if ((e.key === "s" || e.key === "S") &&
+  (!game_won.style.display || game_won.style.display === 'none') && 
+  (!game_over.style.display || game_over.style.display === 'none')
+) {
+  startGame();
+}  if (e.key === "p" || e.key === "P") togglePause();
+
+if ((e.key === "r" || e.key === "R") &&
+(game_won.style.display && game_won.style.display !== 'none' ||
+ game_over.style.display && game_over.style.display !== 'none')) {
+Continue = false;
+restartGame();
+startGame();
+}
+if (e.key === "m" || e.key === "M") {
+  isMuted = !isMuted; // Toggle mute state
+  muteMusic(isMuted);
+}
+}
+function muteMusic(mute) {
+  if (backgroundAudio) {
+    backgroundAudio.muted = mute; // Mute/unmute the audio element
   }
 }
 
@@ -177,28 +254,45 @@ function Clean() {
 
 function gameOver() {
   Continue = true;
-  updateBestScore()
-  updateBestTime()
+  updateBestScore();
+  updateBestTime();
   gameRunning = false;
   gamePaused = false;
   gameEnded = true;
   game_over.style.display = 'block';
   ship.style.display = 'none';
-  hearts.innerText = `hearts : 0`
-  Clean()
+  hearts.innerText = `hearts : 0`;
+
+  // Pause the background music
+  pauseBackgroundAudio();
+
+  // Play the game-over sound
+  const gameOverSound = document.getElementById('game-over-sound');
+  gameOverSound.currentTime = 0; // Restart the sound
+  gameOverSound.play();
+  gameOverSound.volume = 0.2
+
+  Clean(); // Clear the game state
 }
 
 function gameWon() {
-  Continue = true;
   if (document.querySelectorAll('.alien').length === 0) {
-    updateBestScore()
-    updateBestTime()
-    gameRunning = false;
-    gamePaused = false;
-    gameEnded = true;
-    game_won.style.display = 'flex';
-    ship.style.display = 'none';
-    Clean()
+      updateBestScore();
+      updateBestTime();
+      gameRunning = false;
+      gamePaused = false;
+      gameEnded = true;
+      game_won.style.display = 'flex';
+      ship.style.display = 'none';
+
+      // Pause the background music
+      pauseBackgroundAudio();
+
+      const gameOverSound = document.getElementById('game-won-sound');
+      gameOverSound.currentTime = 0; // Restart the sound
+      gameOverSound.play();
+      gameOverSound.volume = 0.2
+      Clean();
   }
 }
 
@@ -291,7 +385,7 @@ function createAliens(rows, aliensPerRow) {
       } else if (row === 2) {
         alienImageSrc = './style/img/enemy3.png';
       } else {
-        alienImageSrc = './style/img/alien.png';
+        alienImageSrc = './style/img/enemy3.png';
       }
       alien.src = alienImageSrc;
       alien.alt = "Illustration of aliens";
@@ -381,7 +475,14 @@ function moveShip(container) {
     if (keys[" "]) {
       const currentTime = Date.now();
       if ((currentTime - lastBulletTime >= BULLET_COOLDOWN * 2.5 ) && Fire>0) {
-       // shootSound.play()
+       // Play only the first second of the shoot sound
+       shootSound.currentTime = 0; // Reset the audio to the beginning
+       shootSound.play();         // Play the audio
+
+       // Stop the audio after 1 second
+       setTimeout(() => {
+         shootSound.pause();
+       }, 1000);
         spawnBullet();
         Fire--
         UPdateFire();
