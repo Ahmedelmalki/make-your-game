@@ -199,8 +199,18 @@ function togglePause() {
   }
   console.log(gamePaused ? 'Game Paused' : 'Game Resumed');
 }
+function toggleResume() {
+  if (!gamePaused || !gameRunning) return;
+  
+  gamePaused = false;
+  menu.style.display = 'none';
 
+  requestAnimationFrame(timer);
+  moveShip(document.getElementById('container')); 
+  spawnBullet(); 
 
+  console.log("Game Resumed");
+}
 
 function cleanEventListeners() {
   document.removeEventListener("keydown", handleKeyDown);
@@ -212,8 +222,9 @@ function handleKeyDown(e) {
   (!game_over.style.display || game_over.style.display === 'none')
 ) {
   startGame();
-}  if (e.key === "p" || e.key === "P") togglePause();
-
+}  
+if (e.key === "p" || e.key === "P") togglePause();
+if (e.key === "l" || e.key === "L") toggleResume();
 if ((e.key === "r" || e.key === "R") &&
 (game_won.style.display && game_won.style.display !== 'none' ||
  game_over.style.display && game_over.style.display !== 'none')) {
