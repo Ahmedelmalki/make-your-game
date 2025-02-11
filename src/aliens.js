@@ -45,10 +45,9 @@ function playBackgroundAudio() {
     console.warn("Audio playback failed:", err);
   });
 
-  // Ensure the audio loops between the start and end times
   backgroundAudio.addEventListener('timeupdate', () => {
     if (backgroundAudio.currentTime >= endTime) {
-      backgroundAudio.currentTime = austartTime; // Reset to start time
+      backgroundAudio.currentTime = austartTime; 
       backgroundAudio.play();
     }
   });
@@ -60,10 +59,10 @@ function pauseBackgroundAudio() {
 
 document.addEventListener('visibilitychange', () => {
   if (document.hidden) {
-    pauseBackgroundAudio(); // Pause when the user tabs away
+    pauseBackgroundAudio(); 
   } else {
     if (gameRunning && !gamePaused && !gameEnded) {
-      playBackgroundAudio(); // Resume when the user comes back
+      playBackgroundAudio();
     }
   }
 });
@@ -71,7 +70,7 @@ document.addEventListener('visibilitychange', () => {
 startGame = function () {
   if (gameRunning) return;
 
-  playBackgroundAudio(); // Start background music
+  playBackgroundAudio(); 
   const container = document.getElementById('container');
 
   const menu = document.getElementById('menu');
@@ -207,7 +206,6 @@ function toggleResume() {
 
   requestAnimationFrame(timer);
   moveShip(document.getElementById('container')); 
-  spawnBullet(); 
 
   console.log("Game Resumed");
 }
@@ -223,23 +221,32 @@ function handleKeyDown(e) {
 ) {
   startGame();
 }  
-if (e.key === "p" || e.key === "P") togglePause();
-if (e.key === "l" || e.key === "L") toggleResume();
+if ((e.key === "p" || e.key === "P") && gameRunning && !gamePaused) {
+  
+  togglePause();
+}
+
+if (e.key === "Escape") {
+  toggleResume();
+}
 if ((e.key === "r" || e.key === "R") &&
-(game_won.style.display && game_won.style.display !== 'none' ||
+(gamePaused || 
+ game_won.style.display && game_won.style.display !== 'none' ||
  game_over.style.display && game_over.style.display !== 'none')) {
+// Allow "R" to restart even if paused
 Continue = false;
 restartGame();
 startGame();
 }
+
 if (e.key === "m" || e.key === "M") {
-  isMuted = !isMuted; // Toggle mute state
+  isMuted = !isMuted; 
   muteMusic(isMuted);
 }
 }
 function muteMusic(mute) {
   if (backgroundAudio) {
-    backgroundAudio.muted = mute; // Mute/unmute the audio element
+    backgroundAudio.muted = mute; 
   }
 }
 
@@ -274,16 +281,14 @@ function gameOver() {
   ship.style.display = 'none';
   hearts.innerText = `hearts : 0`;
 
-  // Pause the background music
   pauseBackgroundAudio();
 
-  // Play the game-over sound
   const gameOverSound = document.getElementById('game-over-sound');
-  gameOverSound.currentTime = 0; // Restart the sound
+  gameOverSound.currentTime = 0; 
   gameOverSound.play();
   gameOverSound.volume = 0.2
 
-  Clean(); // Clear the game state
+  Clean();
 }
 
 function gameWon() {
@@ -296,11 +301,10 @@ function gameWon() {
       game_won.style.display = 'flex';
       ship.style.display = 'none';
 
-      // Pause the background music
       pauseBackgroundAudio();
 
       const gameOverSound = document.getElementById('game-won-sound');
-      gameOverSound.currentTime = 0; // Restart the sound
+      gameOverSound.currentTime = 0; 
       gameOverSound.play();
       gameOverSound.volume = 0.2
       Clean();
@@ -309,13 +313,12 @@ function gameWon() {
 
 
 
-let canDecrement = true; // Variable pour contrôler l'exécution
+let canDecrement = true; 
 
 function checkCollisions() {
   let aliens = document.querySelectorAll('.alien');
   let positionShips = ship.getBoundingClientRect();
 
-  // Vérifie si la position du vaisseau est valide
   if (!positionShips) return;
 
   aliens.forEach((alien) => {
@@ -327,12 +330,9 @@ function checkCollisions() {
       positionAliens.right >= positionShips.left &&
       positionAliens.left <= positionShips.right
     ) {
-      // Appelle decrementHeartsCount uniquement si on peut encore le faire
       if (canDecrement) {
         decrementHeartsCount();
-        canDecrement = false; // Empêche d'exécuter de nouveau immédiatement
-
-        // Réactive après 1 seconde
+        canDecrement = false; 
         setTimeout(() => {
           canDecrement = true;
         }, 1000);
@@ -366,8 +366,7 @@ function decrementHeartsCount() {
   }
 }
 
-// Appeler checkCollisions à intervalles réguliers
-setInterval(checkCollisions, 100); // Vérifie les collisions toutes les 100 ms
+setInterval(checkCollisions, 100); 
 
 
 
@@ -486,11 +485,10 @@ function moveShip(container) {
     if (keys[" "]) {
       const currentTime = Date.now();
       if ((currentTime - lastBulletTime >= BULLET_COOLDOWN * 2.5 ) && Fire>0) {
-       // Play only the first second of the shoot sound
-       shootSound.currentTime = 0; // Reset the audio to the beginning
-       shootSound.play();         // Play the audio
+       shootSound.currentTime = 0; 
+       shootSound.play();    
 
-       // Stop the audio after 1 second
+       
        setTimeout(() => {
          shootSound.pause();
        }, 1000);
