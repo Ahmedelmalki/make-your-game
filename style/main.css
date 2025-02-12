@@ -16,6 +16,55 @@ body {
   overflow: hidden;
   transform: translate(-50%, -50%);
 }
+.story {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: rgb(132, 0, 255);
+  text-shadow: 2px 2px 8px rgba(2, 2, 2, 0.8);
+  padding: 20px 50px;
+  font-size: 24px;
+  font-weight: bold;
+  text-align: center;
+  border: 3px solid white;
+  border-radius: 10px;
+  z-index: 9999;
+  width: 60%;
+  max-width: 600px;
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.5s ease-in-out;
+  transition: transform 0.1s ease-in-out;
+  animation: glow 1.5s infinite alternate;
+  animation: blink 1s glow 1.5s infinite alternate;
+
+}
+
+/* Show story messages smoothly */
+.story.show {
+  opacity: 1;
+}
+
+.alien {
+margin-top: 32px;
+width: 50px;
+height: 50px;
+position: absolute;
+left: 0;
+top: 50%;
+transform: translateY(-50%);
+animation: moveAlien 3s linear infinite;
+}
+
+/* Speed up aliens after 600 points */
+.alien.faster {
+animation-duration: 1.5s;
+}
+
+
+
+
 
 .alien {
   margin-top: 32px;

@@ -40,17 +40,23 @@
 }
 
 .start {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    bottom: 20px;
     background-color: rgba(0, 255, 108, 0.1);
     color: #00ff6c;
     text-shadow: 2px 2px 8px rgba(0, 255, 108, 0.8);
-    font-size: 1.8rem;
     border-radius: 6px;
     padding: 10px 20px;
-    animation: pulseStart 1.5s infinite alternate;
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 2rem;
+    animation: blink 1s infinite;
 }
+@keyframes blink {
+    50% {
+      opacity: 0.5;
+    }
+  }
 
 @keyframes pulseStart {
     0% {

@@ -65,24 +65,7 @@ html {
 
 
 
-/* Start Message */
-.start {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 2rem;
-  color: #00ff6c;
-  text-shadow: 2px 2px 10px rgba(0, 255, 108, 0.8);
-  animation: blink 1s infinite;
-  cursor: pointer;
-}
 
-@keyframes blink {
-  50% {
-    opacity: 0.5;
-  }
-}
 
 
 /* Aliens */
