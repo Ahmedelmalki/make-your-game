@@ -21,14 +21,12 @@ body {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  color: rgb(132, 0, 255);
+  color: rgb(125, 214, 165);
   text-shadow: 2px 2px 8px rgba(2, 2, 2, 0.8);
   padding: 20px 50px;
   font-size: 24px;
   font-weight: bold;
   text-align: center;
-  border: 3px solid white;
-  border-radius: 10px;
   z-index: 9999;
   width: 60%;
   max-width: 600px;
